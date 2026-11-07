@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dzikir Pagi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#F6FAF7; --bar:#DDEDE4; --bar-line:#C5D9CC; --ink:#16231D; --text2:#2B3A33; --muted:#5E7468; --line:#D3E3D9;
+  --ctl:#FFFFFF; --ctl-line:#C9DACF; --pri:#1F7A5A; --pri-ink:#FFFFFF; --done:#0F5A41; --soft:#DCEEE4; --pill-ink:#14604A;
+  --link:#1F7A5A; --acc:#C9A24B; --empty:#9AB0A3; --counter-bg:rgba(246,250,247,.96); --toast-bg:#16231D; --toast-ink:#FFFFFF;
+  --pop-bg:rgba(255,255,255,.7); --pop-border:rgba(255,255,255,.8); --pop-ink:#111; --pop-halo:#fff;
+  --pop-line:rgba(0,0,0,.18); --pop-btn:rgba(255,255,255,.85); --pop-btn-line:rgba(0,0,0,.22); --pop-shadow:rgba(0,0,0,.2);
+  --arab:30px;
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0E1813; --bar:#173025; --bar-line:#244336; --ink:#E7F1EB; --text2:#C9D8CF; --muted:#8FA99B; --line:#233A2F;
+  --ctl:#1B2D24; --ctl-line:#2F4A3C; --pri:#2A8563; --pri-ink:#FFFFFF; --done:#17513D; --soft:#1B3A2D; --pill-ink:#7FD8B4;
+  --link:#5CC9A0; --acc:#D9B85F; --empty:#56705F; --counter-bg:rgba(14,24,19,.96); --toast-bg:#E7F1EB; --toast-ink:#0E1813;
+  --pop-bg:rgba(14,24,19,.74); --pop-border:rgba(255,255,255,.2); --pop-ink:#F2FAF5; --pop-halo:#06100B;
+  --pop-line:rgba(255,255,255,.18); --pop-btn:rgba(255,255,255,.14); --pop-btn-line:rgba(255,255,255,.32); --pop-shadow:rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer}
+input[type=checkbox]{accent-color:var(--pri)}
+.topbar{position:sticky;top:0;z-index:5;background:var(--bar);display:flex;align-items:center;justify-content:space-between;padding:10px 12px;gap:8px;min-height:56px}
+.btn-top{background:var(--ctl);border:1px solid var(--ctl-line);border-radius:6px;padding:8px 14px;font-size:15px}
+.hidden{display:none!important}
+
+/* LIST */
+.chip{border:1px solid var(--ctl-line);background:var(--ctl);border-radius:999px;padding:5px 14px;font-size:14px}
+.list{list-style:none;margin:0;padding:0 0 30px}
+.rows li{border-bottom:1px solid var(--line);background:var(--bg)}
+.rows li.done button{box-shadow:inset 4px 0 0 var(--acc)}
+.rows button{width:100%;text-align:left;background:none;border:0;padding:18px 14px;display:flex;align-items:center;gap:8px}
+.rows .num{color:var(--muted);min-width:28px}
+.rows .ttl{font-weight:600;flex:1}
+.rows .empty .ttl{color:var(--empty);font-weight:500}
+.badge{font-size:13px;color:var(--muted)}
+.badge.ok{color:var(--link);font-weight:700}
+.cat{position:relative;background:var(--bar);min-height:58px;padding:6px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;border-bottom:1px solid var(--bar-line)}
+.catbtn{background:none;border:0;padding:6px 0;font-size:18px;font-weight:600;display:flex;align-items:center;gap:8px;pointer-events:none}
+.catbtn .chev{font-size:12px;opacity:.7;transition:transform .25s}
+.grp.closed .catbtn .chev{transform:rotate(-90deg)}
+.cat .chip{margin-left:auto}
+.rows{list-style:none;margin:0;padding:0}
+.items{display:grid;grid-template-rows:1fr;transition:grid-template-rows .28s ease}
+.items>.inner{overflow:hidden;min-height:0}
+.grp.closed .items{grid-template-rows:0fr}
+.grp.closed .items>.inner{visibility:hidden;transition:visibility 0s .28s}
+
+/* DETAIL */
+.page{padding:16px 16px 170px;max-width:720px;margin:0 auto}
+.kicker{color:var(--muted);font-size:15px;margin:0 0 6px}
+.head{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;margin:0 0 14px}
+.title{font-size:21px;font-weight:700;margin:0}
+.dibaca{font-size:15px;font-weight:600;margin:0;color:var(--pill-ink);background:var(--soft);border-radius:999px;padding:2px 12px;white-space:nowrap}
+@font-face{font-family:"ArNaskh";src:url(fonts/naskh.woff2) format("woff2");font-display:swap}
+.arab{font-family:"ArNaskh","Noto Naskh Arabic","Amiri","Traditional Arabic",serif;font-size:var(--arab);line-height:2.3;text-align:right;direction:rtl;margin:10px 0 24px}
+.latin{font-style:italic;margin:0 0 18px}
+.arti{margin:0 0 20px;white-space:pre-line}
+.sumber{margin:0 0 18px;color:var(--text2)}
+.note h4{margin:18px 0 6px;font-size:17px}
+.note p{margin:0 0 12px}
+.note ol{margin:0 0 12px;padding-left:22px}
+.note li{margin-bottom:6px}
+.src{margin-top:20px;color:var(--text2)}
+.rt{display:flex;gap:8px}
+.btn-top.gear{padding:8px 12px;font-size:19px;line-height:1}
+details.lat{margin:0 0 16px}
+details.lat summary{cursor:pointer;color:var(--link);font-size:15px;font-weight:600;padding:6px 0;list-style:none;user-select:none}
+details.lat summary::-webkit-details-marker{display:none}
+details.lat summary::before{content:"\25B8  "}
+details.lat[open] summary::before{content:"\25BE  "}
+details.lat .latin{margin:4px 0 0}
+.scrim{position:fixed;inset:0;z-index:30;background:transparent}
+.pop{position:fixed;z-index:31;right:12px;top:68px;width:min(320px,calc(100vw - 24px));padding:14px 16px;border-radius:16px;
+  background:var(--pop-bg);-webkit-backdrop-filter:blur(8px) saturate(1.2);backdrop-filter:blur(8px) saturate(1.2);
+  border:1px solid var(--pop-border);box-shadow:0 6px 24px var(--pop-shadow)}
+.pop .lbl,.pop .val{color:var(--pop-ink)}
+.pop .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0}
+.pop .row+.row{border-top:1px solid var(--pop-line)}
+.pop .lbl{font-size:15px;font-weight:600}
+.seg{display:flex;align-items:center;gap:6px}
+.seg button{border:1px solid var(--pop-btn-line);background:var(--pop-btn);color:var(--pop-ink);border-radius:8px;padding:6px 10px;font-size:15px;min-width:44px;white-space:nowrap}
+.seg button.on{background:var(--pri);border-color:var(--pri);color:var(--pri-ink)}
+.seg .val{min-width:30px;text-align:center;font-weight:600}
+#pTema button{padding:6px 9px;min-width:0;font-size:14px}
+.kosong{padding:40px 8px;text-align:center;color:var(--muted)}
+
+/* TAJWID */
+:root{--t-gh:#B26A00;--t-ib:#8E24AA;--t-ia:#5F6B73;--t-im:#6E7B00;--t-iq:#1565C0;--t-ik:#C62828;--t-is:#AD1457;--t-qa:#2E7D32;--t-mt:#00838F;--t-mw:#3949AB;--t-ml:#6D4C41}
+:root[data-theme="dark"]{--t-gh:#F0A030;--t-ib:#C06BDB;--t-ia:#B5B5B5;--t-im:#CFE040;--t-iq:#3FA2F7;--t-ik:#F05A5A;--t-is:#EA86CC;--t-qa:#4CC95F;--t-mt:#2FD0E4;--t-mw:#8E9BE0;--t-ml:#B39A90}
+:root{--b-gh:#F0A030;--b-ib:#BA68D3;--b-ia:#AAAAAA;--b-im:#CFE040;--b-iq:#2F9BF5;--b-ik:#E85555;--b-is:#E682C6;--b-qa:#46C25A;--b-mt:#2FD0E4;--b-mw:#8E9BE0;--b-ml:#B39A90}
+.t-gh{color:var(--t-gh)}.t-ib{color:var(--t-ib)}.t-ia{color:var(--t-ia)}.t-im{color:var(--t-im)}.t-iq{color:var(--t-iq)}.t-ik{color:var(--t-ik)}
+.t-is{color:var(--t-is)}.t-qa{color:var(--t-qa)}.t-mt{color:var(--t-mt)}.t-mw{color:var(--t-mw)}.t-ml{color:var(--t-ml)}
+.arab span[class^="t-"]{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.arab span.sel{background:rgba(255,196,0,.38);border-radius:6px;box-shadow:0 0 0 2px rgba(255,196,0,.38)}
+:root[data-theme="dark"] .arab span.sel{background:rgba(255,214,90,.30);box-shadow:0 0 0 2px rgba(255,214,90,.30)}
+#viewDetail{min-height:100vh;touch-action:pan-y}
+.tip{position:fixed;z-index:7;width:min(320px,calc(100vw - 24px));background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:0 6px 20px rgba(0,0,0,.28)}
+.tip .tn{display:flex;align-items:center;gap:8px;font-size:16px}
+.tip .tn i{flex:none;width:14px;height:14px;border-radius:50%}
+.tip p{margin:6px 0 4px;font-size:14px;line-height:1.45;color:var(--text2)}
+.tip button{border:0;background:none;color:var(--link);font-size:14px;font-weight:600;padding:2px 0}
+.iview{position:fixed;z-index:31;right:12px;top:68px;width:min(360px,calc(100vw - 24px));max-height:calc(100vh - 160px);overflow:auto;overscroll-behavior:contain;padding:12px 14px 10px;border-radius:16px;
+  background:var(--pop-bg);-webkit-backdrop-filter:blur(8px) saturate(1.2);backdrop-filter:blur(8px) saturate(1.2);border:1px solid var(--pop-border);box-shadow:0 6px 24px var(--pop-shadow);color:var(--pop-ink)}
+.iview .ih{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 0 6px;font-weight:700;font-size:17px;color:var(--pop-ink)}
+.iview .ih button{border:1px solid var(--pop-btn-line);background:var(--pop-btn);color:var(--pop-ink);border-radius:8px;width:34px;height:34px;font-size:18px;line-height:1}
+.sec{margin:8px 0 4px}
+.sec .th{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:10px;font-weight:700;font-size:15px;color:#0B0B0B}
+.sec .tb{padding:8px 2px 2px;font-size:13.5px;line-height:1.5;color:var(--pop-ink)}
+.sec .tb p{margin:0 0 6px}
+.sec .tb i{color:var(--pop-ink);opacity:.8}
+.sec .ex{font-family:"ArNaskh","Noto Naskh Arabic",serif;direction:rtl;text-align:right;font-size:24px;line-height:2;padding:0 2px 6px;color:var(--pop-ink)}
+.tg{position:relative;width:42px;height:24px;flex:none}
+.tg input{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:pointer;z-index:1}
+.tg b{position:absolute;inset:0;border-radius:12px;background:rgba(0,0,0,.28);transition:background .2s}
+.tg b::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.tg input:checked+b{background:rgba(0,0,0,.65)}
+.tg input:checked+b::after{transform:translateX(18px)}
+.btn-top.ic{padding:8px 11px;display:flex;align-items:center;justify-content:center;line-height:1}
+/* PROGRESS + RESUME + UNDO */
+.prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--line);pointer-events:none}
+.prog i{display:block;height:100%;width:0;background:var(--pri);transition:width .25s}
+.prog b{position:absolute;top:-1px;width:3px;height:5px;margin-left:-1px;background:var(--acc);border-radius:1px}
+.resume{display:block;width:calc(100% - 24px);margin:12px;padding:14px 16px;border:1px solid var(--pri);background:var(--ctl);color:var(--ink);border-radius:14px;text-align:left;font-size:16px;font-weight:600;line-height:1.3}
+.resume small{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-bottom:2px}
+.resume.fin{border-color:var(--acc);text-align:center}
+.side{display:flex;flex-direction:column;gap:6px}
+.side button{padding:9px 14px;font-size:14px}
+.side button:disabled{opacity:.4}
+.hint{font-size:12px;color:var(--muted);padding:0 4px 4px}
+/* COUNTER */
+.counter{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--counter-bg);border-top:1px solid var(--line);padding:10px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px;justify-content:center}
+.tap{position:relative;overflow:hidden;flex:1;max-width:420px;border:0;border-radius:14px;background:var(--pri);color:var(--pri-ink);padding:14px 10px;font-size:22px;font-weight:700;display:flex;flex-direction:column;align-items:center;line-height:1.15;user-select:none;touch-action:manipulation}
+.tap small{font-size:13px;font-weight:500;opacity:.92}
+.tap.done{background:var(--done);box-shadow:inset 0 0 0 2px var(--acc)}
+.tap.cool{opacity:.78}
+.tap.cool::after{content:"";position:absolute;left:0;bottom:0;height:5px;background:rgba(255,255,255,.9);animation:cool var(--jeda,2s) linear forwards}
+.tap.rej{animation:rej .2s}
+@keyframes rej{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@keyframes cool{from{width:0}to{width:100%}}
+.tap:active{transform:scale(.98)}
+.reset{border:1px solid var(--ctl-line);background:var(--ctl);border-radius:10px;padding:12px 14px;font-size:14px}
+.auto{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+
+.toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:var(--toast-bg);color:var(--toast-ink);padding:8px 16px;border-radius:20px;font-size:14px;z-index:20;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+@media (min-width:720px){.list{max-width:720px;margin:0 auto}}
+</style>
+</head>
+<body>
+
+<!-- ========== DAFTAR ========== -->
+<section id="viewList">
+  <div class="list" id="list"></div>
+</section>
+
+<!-- ========== DETAIL ========== -->
+<section id="viewDetail" class="hidden">
+  <div class="topbar">
+    <div class="prog" id="prog"><i id="progF"></i><b id="progM"></b></div>
+    <button class="btn-top" id="back">&#8617; Balik</button>
+    <strong id="pos"></strong>
+    <div class="rt"><button class="btn-top gear" id="gear" aria-label="Pengaturan">&#9881;&#xFE0E;</button><button class="btn-top ic" id="info" aria-label="Info tajwid"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.6" r=".7" fill="currentColor"/></svg></button><button class="btn-top ic" id="copy" aria-label="Salin"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></div>
+  </div>
+  <div class="page" id="page"></div>
+  <div class="counter" id="counter">
+    <div class="side"><button class="reset" id="undo">&minus;1</button><button class="reset" id="reset">Ulang</button></div>
+    <button class="tap" id="tap"><span id="tapMain">Hitung</span><small id="tapSub"></small></button>
+    <label class="auto"><input type="checkbox" id="auto"> Lanjut<br>otomatis</label>
+  </div>
+</section>
+
+<div class="tip hidden" id="tip" role="status"></div>
+<div class="scrim hidden" id="scrim"></div>
+<div class="iview hidden" id="iview">
+  <div class="ih"><span>Info tajwid</span><button id="iback" aria-label="Tutup">&#10005;</button></div>
+  <div id="isec"></div>
+  <p style="padding:6px 2px 4px;font-size:12px;opacity:.8">Warna dibuat otomatis oleh aturan huruf dan harakat, bisa ada sedikit selisih; rujuk mushaf tajwid bila ragu. Mad 'aridh, mad layyin, dan izhar tidak diwarnai.</p>
+</div>
+<div class="pop hidden" id="pop" role="dialog" aria-label="Pengaturan">
+  <div class="row"><span class="lbl">Ukuran huruf Arab</span>
+    <div class="seg"><button id="pMin">A&minus;</button><span class="val" id="pSize"></span><button id="pPlus">A+</button></div></div>
+  <div class="row"><span class="lbl">Jeda ketukan</span>
+    <div class="seg" id="pJeda"><button data-j="0.25">0,25 dtk</button><button data-j="0.5">0,5 dtk</button><button data-j="1">1 dtk</button></div></div>
+  <div class="row"><span class="lbl">Tema</span>
+    <div class="seg" id="pTema"><button data-t="auto">Otomatis</button><button data-t="terang">Terang</button><button data-t="gelap">Gelap</button></div></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   DATA DZIKIR per kategori (KAT.pagi / KAT.petang) — tambah item baru di array data (urut sesuai nomor).
+   Field: id, judul, jumlah (angka target counter), arab, latin (opsional),
+   arti (opsional), sumber (HR/dalil, opsional), catatan (opsional).
+   catatan = [{h:"judul", p:["paragraf"], ol:["butir 1","butir 2"]}]
+   ===================================================================== */
+const KAT = {
+ pagi:{ nama:"Dzikir Pagi", total:21, data:[
+{
+ id:1, judul:"Dzikir Pagi 1 (Ta'awudz)", jumlah:1,
+ arab:"أَعُوْذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيْمِ",
+ latin:"A'uudzu billaahi minasy-syaithoonir-rojiim.",
+ arti:"Aku berlindung kepada Allah dari godaan syaitan yang terkutuk."
+},
+{
+ id:2, judul:"Dzikir Pagi 2 (Ayat Kursi)", jumlah:1,
+ arab:"اللَّهُ لَآ إِلَـٰهَ إِلَّا هُوَ الْحَىُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُۥ مَا فِى السَّمَـٰوَٰتِ وَمَا فِى الْأَرْضِ ۗ مَن ذَا الَّذِى يَشْفَعُ عِندَهُۥٓ إِلَّا بِإِذْنِهِۦ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَىْءٍ مِّنْ عِلْمِهِۦٓ إِلَّا بِمَا شَآءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَـٰوَٰتِ وَالْأَرْضَ ۖ وَلَا يَـُٔودُهُۥ حِفْظُهُمَا ۚ وَهُوَ الْعَلِىُّ الْعَظِيمُ ﴿٢٥٥﴾",
+ arti:"Allah, tidak ada sesembahan yang berhak disembah kecuali Dia Yang Hidup Kekal lagi terus-menerus mengurus (makhluk-Nya). Tidak mengantuk dan tidak tidur. Kepunyaan-Nya apa yang di langit dan di bumi. Siapakah yang dapat memberi syafa'at di sisi Allah tanpa izin-Nya? Allah mengetahui apa-apa yang di hadapan dan di belakang mereka, dan mereka tidak mengetahui apa-apa dari ilmu Allah melainkan apa yang dikehendaki-Nya. Kursi Allah meliputi langit dan bumi, dan Allah tidak merasa berat memelihara keduanya. Dan Allah Maha Tinggi lagi Maha Besar.\n(Al-Baqarah [2]: 255)."
+},
+{
+ id:3, judul:"Dzikir Pagi 3 (Al-Ikhlas)", jumlah:3,
+ arab:"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\nقُلْ هُوَ اللَّهُ أَحَدٌ ﴿١﴾ اللَّهُ الصَّمَدُ ﴿٢﴾ لَمْ يَلِدْ وَلَمْ يُولَدْ ﴿٣﴾ وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌ ﴿٤﴾",
+ arti:"Dengan nama Allah Yang Maha Pemurah lagi Maha Penyayang.\n(1) Katakanlah: Dialah Allah Yang Maha Esa.\n(2) Allah adalah Ilah yang bergantung kepada-Nya segala urusan.\n(3) Dia tidak beranak dan tiada pula diperanakkan.\n(4) Dan tidak ada seorang pun yang setara dengan Dia.\n(Al-Ikhlas [112]: 1-4).",
+ sumber:"HR. Abu Dawud 4/322, At-Tirmidzi 5/567 dan lihat Shahih At-Tirmidzi 3/182.",
+ catatan:[{p:["\"Barangsiapa membaca tiga surat tersebut (surat Al-Ikhlas, Al-Falaq dan An-Naas, ketiganya dinamakan Al-Mu'awwidzaat) sebanyak 3x setiap pagi dan sore hari, maka itu (tiga surat tersebut) cukup baginya dari segala sesuatu.\" (Yaitu melindunginya dari segala bentuk bahaya dengan izin Allah)."]}]
+},
+{
+ id:4, judul:"Dzikir Pagi 4 (Al-Falaq)", jumlah:3,
+ arab:"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\nقُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ﴿١﴾ مِن شَرِّ مَا خَلَقَ ﴿٢﴾ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ﴿٣﴾ وَمِن شَرِّ النَّفَّـٰثَـٰتِ فِى الْعُقَدِ ﴿٤﴾ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ ﴿٥﴾",
+ arti:"Dengan nama Allah Yang Maha Pemurah lagi Maha Penyayang.\n(1) Katakanlah: Aku berlindung kepada Rabb yang menguasai Subuh.\n(2) Dari kejahatan makhluk-Nya.\n(3) Dan dari kejahatan malam apabila telah gelap gulita.\n(4) Dan dari kejahatan wanita-wanita tukang sihir yang menghembus pada buhul-buhul.\n(5) Dan dari kejahatan orang yang dengki apabila ia dengki.\n(Al-Falaq [113]: 1-5).",
+ sumber:"HR. Abu Dawud 4/322, At-Tirmidzi 5/567 dan lihat Shahih At-Tirmidzi 3/182.",
+ catatan:[{p:["\"Barangsiapa membaca tiga surat tersebut (surat Al-Ikhlas, Al-Falaq dan An-Naas, ketiganya dinamakan Al-Mu'awwidzaat) sebanyak 3x setiap pagi dan sore hari, maka itu (tiga surat tersebut) cukup baginya dari segala sesuatu.\" (Yaitu melindunginya dari segala bentuk bahaya dengan izin Allah)."]}]
+},
+{
+ id:5, judul:"Dzikir Pagi 5 (An-Naas)", jumlah:3,
+ arab:"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\nقُلْ أَعُوذُ بِرَبِّ النَّاسِ ﴿١﴾ مَلِكِ النَّاسِ ﴿٢﴾ إِلَـٰهِ النَّاسِ ﴿٣﴾ مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ﴿٤﴾ الَّذِى يُوَسْوِسُ فِى صُدُورِ النَّاسِ ﴿٥﴾ مِنَ الْجِنَّةِ وَالنَّاسِ ﴿٦﴾",
+ arti:"Dengan nama Allah Yang Maha Pemurah lagi Maha Penyayang.\n(1) Katakanlah: Aku berlindung kepada Rabb manusia.\n(2) Raja manusia.\n(3) Sembahan manusia.\n(4) Dari kejahatan (bisikan) syaitan yang biasa bersembunyi.\n(5) Yang membisikkan (kejahatan) ke dalam dada manusia.\n(6) Dari jin dan manusia.\n(An-Nas [114]: 1-6).",
+ sumber:"HR. Abu Dawud 4/322, At-Tirmidzi 5/567 dan lihat Shahih At-Tirmidzi 3/182.",
+ catatan:[{p:["\"Barangsiapa membaca tiga surat tersebut (surat Al-Ikhlas, Al-Falaq dan An-Naas, ketiganya dinamakan Al-Mu'awwidzaat) sebanyak 3x setiap pagi dan sore hari, maka itu (tiga surat tersebut) cukup baginya dari segala sesuatu.\" (Yaitu melindunginya dari segala bentuk bahaya dengan izin Allah)."]}]
+},
+{
+ id:6, judul:"Dzikir Pagi 6", jumlah:1,
+ arab:"أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لاَ إِلَـهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ. رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
+ latin:"Ash-bahnaa wa ash-bahal mulku lillaah, wal hamdulillaah, laa ilaaha illallaah, wahdahu laa syariika lah, lahul mulku wa lahul hamd, wa huwa 'alaa kulli syai-in qodiir. Robbi as-aluka khoiro maa fii haadzal yaumi wa khoiro maa ba'dahu, wa a'uudzu bika min syarri maa fii haadzal yaumi wa syarri maa ba'dahu, robbi a'uudzu bika minal kasali wa suu-il kibar, robbi a'uudzu bika min 'adzaabin fin-naari wa 'adzaabin fil qobr.",
+ arti:"Kami telah memasuki waktu pagi dan kerajaan hanya milik Allah, segala puji bagi Allah. Tidak ada sesembahan yang berhak disembah kecuali Allah, Yang Maha Esa, tiada sekutu bagi-Nya. Bagi-Nya kerajaan dan bagi-Nya pujian. Dan Dia Maha Kuasa atas segala sesuatu. Hai Tuhan, aku mohon kepada-Mu kebaikan di hari ini dan kebaikan sesudahnya. Aku berlindung kepadaMu dari kejahatan hari ini dan kejahatan sesudahnya. Wahai Tuhan, aku berlindung kepadaMu dari kemalasan dan kejelekan di hari tua. Wahai Tuhan, aku berlindung kepadaMu dari siksaan di Neraka dan kubur.",
+ sumber:"HR. Muslim 4/2088.",
+ catatan:[{h:"Keterangan:",ol:[
+  "Doa di atas berdasarkan hadis dari Ibnu Mas'ud radliallahu 'anhu, bahwa Nabi shallallahu 'alaihi wa sallam ketika sore membaca: (doa di atas).",
+  "Doa di atas menunjukkan sikap ketundukan seorang muslim kepada Allah. Dia mengawali paginya atau sore harinya dengan ikrar dan berbagai pengakuan. Dia berikrar tentang keabadian kerajaan Allah. Dia memuji Allah di waktu paginya. Dia berikrar tentang laa ilaaha illallaah, dan beberapa ikrar lainnya. Kemudian diikuti dengan berdoa, memohon kepada Allah agar diberi kebaikan pada malam atau hari itu, dan dilindungi dari segala bentuk keburukan pada malam atau hari itu. Yang bisa jadi tidak kita ketahui dan datang tanpa disangka-sangka.",
+  "Kemudian seorang muslim memohon perlindungan dari penyebab keburukan, yaitu sikap malas dan dampak dari sikap malas, yaitu kondisi buruk di hari tua. Di penghujung doa ini, seorang muslim berlindung kepada Allah dari siksa hari akhir, yaitu siksa kubur dan siksa neraka."
+ ]}]
+},
+{
+ id:7, judul:"Dzikir Pagi 7", jumlah:1,
+ arab:"اَللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ",
+ latin:"Allaahumma bika ash-bahnaa, wa bika amsainaa, wa bika nahyaa, wa bika namuutu, wa ilaikan-nusyuur.",
+ arti:"Ya Allah, dengan rahmat dan pertolonganMu kami memasuki waktu pagi, dan dengan rahmat dan pertolonganMu kami memasuki waktu sore. Dengan rahmat dan pertolonganMu kami hidup dan dengan kehendakMu kami mati. Dan kepadaMu kebangkitan (bagi semua makhluk).",
+ sumber:"HR. At Turmudzi 3391 dan dishahihkan Al-Albani.",
+ catatan:[
+  {h:"Keterangan:",p:["Dari Abu Hurairah radliallahu 'anhu, beliau berkata: Ketika masuk waktu pagi, Nabi shallallahu 'alaihi wa sallam biasa membaca: 'Allahumma bika ashbahnaa…' dan ketika sore beliau membaca: 'Allahumma bika amsainaa…'."]},
+  {p:["Doa di atas menunjukkan betapa orang yang membacanya adalah orang yang sangat pasrah kepada Allah. Dia mengakui bahwa dirinya mampu hidup di hari itu, semata karena nikmat dari Allah ta'ala. Dia senantiasa dalam kondisi mengakui hal itu selama hidup dan matinya. Dia juga mengakui bahwa dia bakal kembali kepada Allah ta'ala."]}
+ ]
+},
+{
+ id:8, judul:"Dzikir Pagi 8 (Sayyidul Istighfar)", jumlah:1,
+ arab:"اَللَّهُمَّ أَنْتَ رَبِّي، لاَ إِلَـهَ إِلاَّ أَنْتَ، خَلَقْتَنِي، وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي، فَاغْفِرْ لِي، فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ",
+ latin:"Allaahumma anta robbii, laa ilaaha illaa anta, kholaqtanii, wa anaa 'abduka, wa anaa 'alaa 'ahdika wa wa'dika mas-tatho'tu, a'uudzu bika min syarri maa shona'tu, abuu-u laka bini'matika 'alayya, wa abuu-u laka bi-dzanbii, faghfir lii, fa-innahu laa yagh-firudz-dzunuuba illaa anta.",
+ arti:"Ya Allah, Engkau adalah Tuhanku, tidak ada sesembahan yang berhak disembah kecuali Engkau, Engkaulah yang menciptakan aku. Aku adalah hambaMu. Aku akan setia pada perjanjianku denganMu semampuku. Aku berlindung kepadaMu dari kejelekan yang kuperbuat. Aku mengakui nikmatMu kepadaku dan aku mengakui dosaku, oleh karena itu, ampunilah aku. Sesungguhnya tiada yang mengampuni dosa kecuali Engkau.",
+ sumber:"HR. Al Bukhari no. 5522, 6306 dan 6323, at-Tirmidzi no. 3393, an-Nasa'i no. 5522 dan lain-lain.",
+ catatan:[
+  {h:"Keutamaan:",p:["Dari Syaddad bin Aus radhiallahu 'anhu bahwa Nabi shallallahu 'alaihi wa salam bersabda, \"Sayyidul Istighfar adalah bacaan: (doa di atas).\" Kemudian beliau menyebutkan keutamaannya, \"Barangsiapa yang membaca doa ini dengan penuh keyakinan di sore hari, kemudian dia mati pada malam harinya (sebelum pagi) maka dia termasuk ahli surga. Dan barangsiapa yang membacanya dengan penuh keyakinan di pagi hari, kemudian dia mati pada siang harinya (sebelum sore) maka dia termasuk ahli surga.\""]},
+  {h:"Keterangan:",p:["Dinamakan Sayyidul Istighfar, karena bacaan istighfar di atas adalah lafal istighfar yang paling mulia dibandingkan lafal istighfar lainnya. Dalam lafal istighfar ini, terdapat 8 aspek yang menjadikan istighfar ini memiliki keutamaan yang besar:"],ol:[
+   "Dimulai dengan pujian kepada Allah.",
+   "Adanya pengakuan bahwa dirinya adalah hamba Allah, makhluk Allah yang berusaha menghambakan dirinya kepada Allah.",
+   "Mengimani adanya janji Allah, sehingga sang hamba sangat berpijak pada ikrarnya untuk mendapatkan janji Tuhannya.",
+   "Pengakuan akan kekurangan dirinya, dengan sekaligus memohon perlindungan kepada Tuhannya dari keburukan dirinya.",
+   "Pengakuan terhadap banyaknya nikmat yang telah Allah berikan kepada dirinya, yang ini mewakili rasa syukur.",
+   "Pengakuan terhadap banyaknya dosa dan kelancangannya, yang ini merupakan bentuk taubatnya.",
+   "Diakhiri dengan permohonan ampunan yang setulusnya kepada Allah.",
+   "Dengan keyakinan, tidak ada Dzat yang mampu mengampuni dosa-dosa hamba kecuali Allah, Sang Maha Kasih Sayang."
+  ]},
+  {p:["(Fiqh al-Adiyah, 3/15)."]}
+ ]
+},
+{
+ id:9, judul:"Dzikir Pagi 9", jumlah:3,
+ arab:"اَللَّهُمَّ عَافِنِي فِي بَدَنِي، اَللَّهُمَّ عَافِنِي فِي سَمْعِي، اَللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَـهَ إِلاَّ أَنْتَ. اَللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، اَللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لاَ إِلَـهَ إِلاَّ أَنْتَ",
+ latin:"Allaahumma 'aafinii fii badanii, allaahumma 'aafinii fii sam'ii, allaahumma 'aafinii fii bashorii, laa ilaaha illaa anta. Allaahumma innii a'uudzu bika minal kufri wal faqr, allaahumma innii a'uudzu bika min 'adzaabil qobr, laa ilaaha illaa anta.",
+ arti:"Ya Allah, selamatkan tubuhku (dari penyakit dan yang tidak aku inginkan). Ya Allah, selamatkan pendengaranku (dari penyakit dan maksiat atau sesuatu yang tidak aku inginkan). Ya Allah, selamatkan penglihatanku, tidak ada sesembahan yang berhak disembah kecuali Engkau. Ya Allah, sesungguhnya aku berlindung kepadaMu dari kekufuran dan kefakiran. Ya Allah, aku berlindung kepadaMu dari siksa kubur, tidak ada sesembahan yang berhak disembah kecuali Engkau.",
+ sumber:"HR. Abu Dawud 4/324, Ahmad 5/42, An-Nasai dalam 'Amalul Yaum wal Lailah no. 22, halaman 146, Ibnus Sunni no. 69. Al-Bukhari dalam Al-Adabul Mufrad. Syaikh Abdul Aziz bin Baaz menyatakan sanad hadits tersebut hasan. Lihat juga Tuhfatul Akhyar, halaman 26.",
+ catatan:[
+  {h:"Keterangan:",p:["Di awal dzikir disebutkan badan, kemudian disebutkan pendengaran dan penglihatan, padahal pendengaran dan penglihatan termasuk anggota badan. Ini menunjukkan keutamaan pendengaran dan penglihatan. Disamping kedua indra tersebut merupakan jalan masuknya ilmu."]},
+  {h:"Hadis selengkapnya:",p:["Dari Abdurrahman bin Abi Bakrah, bahwa dia bertanya kepada bapaknya: Wahai ayahku, aku selalu mendengar engkau membaca: (dzikir di atas), dan engkau mengulanginya 3x setiap pagi dan 3x setiap sore. Kemudian Abu Bakrah radliallahu 'anhu mengatakan: Aku mendengar Rasulullah shallallahu 'alaihi wa sallam membaca doa ini, dan aku senang meniru sunnah beliau."]}
+ ]
+},
+{
+ id:10, judul:"Dzikir Pagi 10", jumlah:1,
+ arab:"اَللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالآخِرَةِ، اَللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اَللَّهُمَّ اسْتُرْ عَوْرَاتِي، وَآمِنْ رَوْعَاتِي، اَللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ، وَمِنْ خَلْفِي، وَعَنْ يَمِينِي، وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي",
+ latin:"Allaahumma innii as-alukal 'afwa wal 'aafiyata fid-dunyaa wal aakhiroh, allaahumma innii as-alukal 'afwa wal 'aafiyata fii dinii, wa dunyaaya, wa ahlii, wa maalii, allaahummas-tur 'aurootii, wa aamin rou'aatii, allaahummah-fazhnii min baini yadayya, wa min kholfii, wa 'an yamiinii, wa 'an syimaalii, wa min fauqii, wa a'uudzu bi'azhomatika an ugh-taala min tahtii.",
+ arti:"Ya Allah, sesungguhnya aku memohon maaf (ampunan) dan keselamatan di dunia dan akhirat. Ya Allah, sesungguhnya aku memohon maaf (ampunan) dan keselamatan dalam agama, dunia, keluarga dan hartaku. Ya Allah, tutupilah auratku (aurat badan, cacat, aib dan sesuatu yang tidak layak dilihat orang) dan tenteramkanlah aku dari rasa takut. Ya Allah, peliharalah aku dari muka, belakang, kanan, kiri dan atasku. Aku berlindung dengan kebesaranMu, agar aku tidak disambar dari bawahku (oleh ulat, tenggelam atau ditelan bumi dan lain-lain).",
+ catatan:[{h:"Keutamaan:",ol:[
+  "Dari Ibn Umar radliallahu 'anhuma, bahwa beliau mendengar Nabi shallallahu 'alaihi wa sallam membaca wirid ini ketika pagi dan sore, dan beliau tidak pernah meninggalkannya sampai beliau meninggal dunia: (dzikir di atas). (HR. Abu Daud, Ibn Majah dan dishahihkan Al Albani).",
+  "Dari Abbas bin Abdul Muthallib, beliau bertanya kepada Nabi shallallahu 'alaihi wa sallam: Ya Rasulullah, ajarilah aku doa yang harus aku panjatkan kepada Allah. Nabi shallallahu 'alaihi wa sallam bersabda: \"Wahai Abbas, mintalah al afiyah (terbebas dari masalah) kepada Allah.\" Kemudian, setelah tiga hari, Abbas datang lagi dan mengatakan: Ya Rasulullah, ajarilah aku doa yang harus aku panjatkan kepada Allah. Nabi shallallahu 'alaihi wa sallam bersabda: \"Wahai Abbas, wahai pamanku, mintalah kepada Allah al afiyah (terbebas dari masalah) di dunia dan akhirat.\" (HR. Al Bukhari dalam Adabul Mufrad dan dishahihkan Al Albani).",
+  "Dari Anas bin Malik radliallahu 'anhu, bahwasanya ada seorang yang datang kepada Nabi shallallahu 'alaihi wa sallam dan bertanya: Ya Rasulullah, doa apa yang paling afdhal? Beliau menjawab: \"Mintalah kepada Allah al afiyah (terbebas dari masalah) di dunia dan akhirat.\" Kemudian besoknya dia datang lagi dan bertanya: Wahai Nabi Allah, doa apa yang paling afdhal? Beliau menjawab: \"Mintalah kepada Allah al afiyah (terbebas dari masalah) di dunia dan akhirat. Karena jika engkau diberi al afiyah di dunia dan akhirat berarti kamu beruntung.\" (HR. Al Bukhari dalam Adabul Mufrad dan dishahihkan Al Albani)."
+ ]}]
+},
+{
+ id:11, judul:"Dzikir Pagi 11", jumlah:1,
+ arab:"اَللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ، فَاطِرَ السَّمَاوَاتِ وَالأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لاَ إِلَـهَ إِلاَّ أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءًا، أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ",
+ latin:"Allaahumma 'aalimal ghoibi wasy-syahaadati, faathiros-samaawaati wal ardh, robba kulli syai-in wa maalikahu, asyhadu al-laa ilaaha illaa anta, a'uudzu bika min syarri nafsii, wa min syarrisy-syaithooni wa syirkih, wa an aqtarifa 'alaa nafsii suu-an, au ajurrohu ilaa muslim.",
+ arti:"Ya Allah, yang Maha Mengetahui yang ghaib dan yang nyata, wahai Tuhan pencipta langit dan bumi, Tuhan segala sesuatu dan yang merajainya. Aku bersaksi bahwa tidak ada sesembahan yang berhak disembah kecuali Engkau. Aku berlindung kepadaMu dari kejahatan diriku, setan dan balatentaranya, dan aku (berlindung kepadaMu) dari berbuat kejelekan terhadap diriku atau mendorongnya kepada seorang muslim.",
+ sumber:"HR. At-Tirmidzi dan Abu Dawud. Lihat kitab Shahih At-Tirmidzi 3/142.",
+ catatan:[
+  {h:"Hadis selengkapnya:",p:["Dari Abu Hurairah radliallahu 'anhu, bahwa Abu Bakr As Siddiq berkata kepada Nabi shallallahu 'alaihi wa sallam: Tunjukkanlah aku beberapa kalimat, yang aku baca setiap pagi dan sore. Kemudian beliau bersabda: \"Bacalah: (doa di atas). Baca doa ini setiap pagi, sore, dan ketika hendak tidur.\""]},
+  {h:"Sisi penting dzikir ini:",ol:[
+   "Dzikir ini permintaan sahabat yang paling mulia: Abu Bakr as-Shiddiq radliallahu 'anhu.",
+   "Dzikir ini diajarkan oleh manusia paling mulia, Rasulullah shallallahu 'alaihi wa sallam.",
+   "Memulai doa dengan memuji Allah, Dialah Dzat yang mengetahui segala sesuatu dan pemilik segala sesuatu.",
+   "Pengakuan bahwa tidak ada sesembahan yang berhak disembah kecuali Allah.",
+   "Doa memohon perlindungan dari segala bentuk keburukan: sumbernya dan dampaknya. Sumber keburukan ada 2: nafsu manusia dan godaan setan. Dampak keburukan ada 2: dampak untuk diri sendiri dan dampak bagi orang lain."
+  ]}
+ ]
+},
+{
+ id:12, judul:"Dzikir Pagi 12", jumlah:3,
+ arab:"بِسْمِ اللَّهِ الَّذِي لاَ يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَلاَ فِي السَّمَاءِ، وَهُوَ السَّمِيعُ الْعَلِيمُ",
+ latin:"Bismillaahil-ladzii laa yadhurru ma'as-mihi syai-un, fil ardhi wa laa fis-samaa', wa huwas-samii'ul 'aliim.",
+ arti:"Dengan nama Allah, yang tidak akan berbahaya dengan namaNya, segala sesuatu di bumi dan langit, Dia-lah Yang Maha Mendengar lagi Maha Mengetahui.",
+ sumber:"HR. Abu Dawud 4/323, At-Tirmidzi 5/465, Ibnu Majah dan Ahmad. Lihat Shahih Ibnu Majah 2/332, Al-Allamah Ibnu Baaz berpendapat, isnad hadits tersebut hasan dalam Tuhfatul Akhyar hal. 39.",
+ catatan:[
+  {h:"Keutamaan:",p:[
+   "Dari Utsman bin Affan radliallahu 'anhu, beliau mendengar Nabi shallallahu 'alaihi wa sallam bersabda: Siapa yang setiap pagi dan sore membaca doa ini 3x: (doa di atas), maka dia tidak ada sesuatupun yang membahayakan dirinya.",
+   "Suatu ketika Aban bin Utsman salah satu sisi tubuhnya mengalami kelumpuhan. Tiba-tiba ada seseorang yang melihatnya (keheranan). Aban marah: Kenapa lihat-lihat. Hadis tentang bacaan di atas telah aku sampaikan, namun hari ini aku lupa mengucapkannya, agar takdir Allah ini mengenai diriku.",
+   "Imam al-Qurthubi mengatakan: Ini adalah hadis yang shahih, perkataan yang benar. Saya meyakini kebenarannya dari dalil dan terbukti di dunia nyata. Sejak saya mendengar hadis ini, saya selalu mengamalkannya, sehingga tidak hal berbahaya yang mengenai diriku, kecuali jika aku lupa membacanya. Suatu ketika di madinah, saya disengat kalajengking. Kemudian aku ingat-ingat, ternyata aku lupa membaca dzikir tersebut. (al-Futuhat ar-Rabbaniyah, 3/100)."
+  ]}
+ ]
+},
+{
+ id:13, judul:"Dzikir Pagi 13", jumlah:3,
+ arab:"رَضِيتُ بِاللَّهِ رَبًّا، وَبِالإِسْلاَمِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا",
+ latin:"Rodhiitu billaahi robbaa, wa bil islaami diinaa, wa bimuhammadin shollallaahu 'alaihi wa sallama nabiyyaa.",
+ arti:"Aku rela Allah sebagai Tuhanku, Islam sebagai agamaku dan Muhammad shallallahu 'alaihi wa sallam sebagai nabiku (yang diutus oleh Allah).",
+ sumber:"HR. Ahmad 4/337, An-Nasa'i dalam 'Amalul Yaum wal Lailah no. 4 dan Ibnus Sunni no. 68. Abu Daud 4/418, At-Tirmidzi 5/465 dan Ibnu Baaz berpendapat, hadits tersebut hasan dalam Tuhfatul Akhyar hal. 39.",
+ catatan:[
+  {p:["\"Barangsiapa membacanya sebanyak 3x ketika pagi dan sore hari, maka hak Allah memberikan keridhaanNya kepadanya pada hari Kiamat.\""]},
+  {h:"Keterangan:",ol:[
+   "Aku rela Allah sebagai Tuhanku: Aku cukupkan diriku untuk hanya meminta kepadaNya, beribadah kepadaNya, tidak ada sesembahan yang berhak disembah kecuali Dia.",
+   "Aku rela islam sebagai agamaku: aku tidak menempuh jalan hidup kecuali yang sesuai dengan syariat islam."
+  ]},
+  {h:"Keutamaan:",p:[
+   "Dari Tsauban bin Bujdud radliallahu 'anhu, pelayan Nabi shallallahu 'alaihi wa sallam, bahwa beliau mendengar Nabi shallallahu 'alaihi wa sallam bersabda: \"Apabila seorang hamba di pagi dan sore hari membaca doa ini 3x: (dzikir di atas), maka telah menjadi kewajiban Allah untuk meridlainya pada hari kiamat.\" (HR. Ahmad, Abu Daud, Ibn Majah dan sanadnya dihasankan Syaikh Ibn Baz dalam Tuhfatul Ahyar).",
+   "Makna \"menjadi kewajiban Allah\": Allah wajibkan diriNya sendiri untuk melaksanakannya."
+  ]}
+ ]
+},
+{
+ id:14, judul:"Dzikir Pagi 14", jumlah:1, sumberAkhir:"facebook.com/doa.dzikir.shahih.harian",
+ arab:"يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلاَ تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
+ latin:"Yaa hayyu yaa qoyyuum, birohmatika astaghiits, ashlih lii sya'nii kullah, wa laa takilnii ilaa nafsii thorfata 'ain.",
+ arti:"Wahai Tuhan Yang Maha Hidup, wahai Tuhan Yang Berdiri Sendiri (tidak butuh segala sesuatu), dengan rahmat-Mu aku minta pertolongan, perbaikilah segala urusanku, dan jangan Kau serahkan kepadaku meskipun sekejap mata (tanpa mendapat pertolongan dariMu).",
+ sumber:"HR. An-Nasa'i dalam Sunan al-Kubro, Al-Hakim dalam al-Mustadzrak, Al-Baihaqi dalam Asma wa shifat dan dishahihkan Al Albani dalam Silsilah as-Shahihah no. 227).",
+ catatan:[{h:"Hadis selengkapnya:",p:["Dari Anas bin Malik radliallahu 'anhu, bahwa beliau mendengar Nabi shallallahu 'alaihi wa sallam bersabda kepada Fatimah: \"Apa yang menghalangimu untuk mendengarkan nasehatku, bacalah ketika pagi dan sore hari: (dzikir di atas).\""]}]
+},
+{
+ id:15, judul:"Dzikir Pagi 15", jumlah:1,
+ arab:"أَصْبَحْنَا عَلَى فِطْرَةِ الإِسْلاَمِ، وَعَلَى كَلِمَةِ الإِخْلاَصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ، حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
+ latin:"Ash-bahnaa 'alaa fithrotil islaam, wa 'alaa kalimatil ikhlaash, wa 'alaa diini nabiyyinaa muhammadin shollallaahu 'alaihi wa sallam, wa 'alaa millati abiinaa ibroohiim, haniifan musliman wa maa kaana minal musyrikiin.",
+ arti:"Di waktu pagi kami berada di atas fitrah Islam, kalimat ikhlas, agama Nabi kami Muhammad, dan agama ayah kami Ibrahim, yang berdiri di atas jalan yang lurus, muslim dan tidak tergolong orang-orang musyrik.",
+ sumber:"HR. Ahmad 3/406-407, 5/123. Lihat juga Shahihul Jami' 4/290. Ibnus Sunni juga meriwayatkannya di 'Amalul Yaum wal Lailah no. 34.",
+ catatan:[
+  {h:"Keterangan kalimat:",ol:[
+   "Fitrah islam: Agama yang benar. Terkadang kata fitrah bermakna sunnah (ajaran).",
+   "Kalimat ikhlas: Dua kalimat syahadat."
+  ]},
+  {h:"Hadis selengkapnya:",p:["Dari Abdurrahman bin Abu Abza radliallahu 'anhu, bahwa Nabi shallallahu 'alaihi wa sallam ketika pagi dan sore, beliau membaca: (dzikir di atas). (HR. Ahmad dan dishahihkan Al Albani)."]},
+  {h:"Pesan:",p:["Inilah keindahan akhlak seorang mukmin… dia awali pagi harinya dengan kalimat mulia nan penuh berkah. Dia membuka lembaran pagi harinya dengan memperbarui imannya, menyatakan ikrar tauhid, komitmen terhadap agama Nabi Muhammad shallallahu 'alaihi wa sallam dan mengikuti ajaran Ibrahim – al-Hanifiyah as-Samhah – serta menjauh dari segala kesyirikan apapun bentuknya."]}
+ ]
+},
+{
+ id:16, judul:"Dzikir Pagi 16", jumlah:10, dibaca:"Dibaca 10x, atau 1x saat malas",
+ arab:"لاَ إِلَـهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+ latin:"Laa ilaaha illallaah, wahdahu laa syariika lah, lahul mulku wa lahul hamdu, wa huwa 'alaa kulli syai-in qodiir.",
+ arti:"Tidak ada sesembahan yang berhak disembah kecuali Allah, Yang Maha Esa, tiada sekutu bagi-Nya. Bagi-Nya kerajaan dan bagi-Nya pujian. Dan Dia Maha Kuasa atas segala sesuatu.",
+ sumber:"HR. Abu Dawwud 4/319, Ibnu Majah dan Ahmad 4/60. Lihat Shahih At-Targhib wat Tarhib 1/270, Shahih Abu Dawud 3/957, Shahih Ibnu Majah 2/331 dan Zadul Ma'ad 2/377.",
+ catatan:[
+  {h:"Keutamaan:",ol:[
+   "Dibaca 1x. Dari Abu Ayyasy radliallahu 'anhu, Nabi shallallahu 'alaihi wa sallam bersabda, \"Barangsiapa di waktu pagi membaca: (dzikir di atas), nilainya seperti seorang budak keturunan Nabi Ismail, dicatat baginya 10 kebaikan, dihapuskan darinya 10 kesalahan, dan diangkat derajatnya 10 tingkatan, serta dia dalam perlindungan dari setan sampai sore. Demikian pula ketika sore, dia membacanya dan dijaga sampai pagi.\" (HR. Ahmad, Abu Daud, Ibn Majah dan dishahihkan Al Albani).",
+   "Dibaca 10x. Dari Abu Ayyub Al Anshari radliallahu 'anhu, Nabi shallallahu 'alaihi wa sallam bersabda, \"Barangsiapa di waktu pagi membaca: (dzikir di atas) 10x, nilainya seperti 4 budak, dicatat untuknya 10 kebaikan, dihapuskan darinya 10 kesalahan, diangkat derajatnya 10 tingkatan, dan bacaan itu menjadi perlindungan baginya dari setan sampai sore. Dan jika ada orang yang membacanya setelah maghrib, dia juga mendapatkan hal yang sama.\" (HR. Ahmad, Abu Daud, An Nasa'i dan dishahihkan Al Albani)."
+  ]},
+  {h:"Penjelasan kalimat:",p:["Keturunan Nabi Ismail: Merupakan keturunan terbaik."]}
+ ]
+},
+{
+ id:17, judul:"Dzikir Pagi 17", jumlah:100, dibaca:"Dibaca 100x dalam sehari",
+ arab:"لاَ إِلَـهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+ latin:"Laa ilaaha illallaah, wahdahu laa syariika lah, lahul mulku wa lahul hamdu, wa huwa 'alaa kulli syai-in qodiir.",
+ arti:"Tidak ada sesembahan yang berhak disembah kecuali Allah, Yang Maha Esa, tiada sekutu bagi-Nya. Bagi-Nya kerajaan dan bagi-Nya pujian. Dan Dia Maha Kuasa atas segala sesuatu.",
+ sumber:"HR. Al-Bukhari 4/95 dan Muslim 4/2071.",
+ catatan:[
+  {h:"Keutamaan:",p:["Dari Abu Hurairah radliallahu 'anhu, bahwa Nabi shallallahu 'alaihi wa sallam bersabda, \"Barangsiapa yang membaca (dzikir di atas) 100x dalam sehari, maka itu senilai 10 budak, dicatat untuknya 100 kebaikan, dihapuskan darinya 100 kesalahan, dan bacaan itu menjadi perlindungan dari setan pada hari itu sampai sore, serta tidak ada seorangpun yang datang (pada hari kiamat) dengan membawa pahala yang lebih baik dari pahala yang dia bawa, kecuali orang yang membaca lebih banyak.\" (HR. Al Bukhari dan Muslim)."]},
+  {h:"Penjelasan kalimat:",ol:[
+   "100x dalam sehari: Imam An Nawawi mengatakan: Dlahir hadis menunjukkan bahwa pahala yang disebutkan bisa didapatkan oleh orang yang membaca dzikir ini 100x dalam sehari, baik dia baca 100 sekaligus atau terpisah-pisah di beberapa tempat, atau dia baca sebagian di pagi hari dan sebagian di sore hari. Namun yang afdhal, dia baca 100 sekaligus di pagi hari, agar bisa menjadi perlindungan baginya dari setan sehari penuh. Demikian pula jika dia baca di awal malam maka menjadi perlindungan baginya semalam penuh. (Tuhfatul Ahwadzi).",
+   "Orang yang membaca lebih banyak: An Nawawi mengatakan: Ini dalil bahwa orang yang membaca tahlil lebih dari 100 dalam sehari maka dia mendapatkan pahala 100 tahlil sebagaimana disebutkan dalam hadis, disamping dia mendapat pahala tahlil tambahannya. (Tuhfatul Ahwadzi)."
+  ]}
+ ]
+},
+{
+ id:18, judul:"Dzikir Pagi 18", jumlah:3,
+ arab:"سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ",
+ latin:"Subhaanallaahi wa bihamdihi 'adada kholqih, wa ridhoo nafsih, wa zinata 'arsyih, wa midaada kalimaatih.",
+ arti:"Maha Suci Allah, aku memuji-Nya sebanyak makhluk-Nya, sesuai keridhaan-Nya, seberat timbangan arasy-Nya dan sebanyak tinta (yang menulis) kalimat-Nya.",
+ sumber:"HR. Muslim 2726.",
+ catatan:[
+  {h:"Keterangan:",p:["Makna kalimat dzikir di atas bahwa Allah satu-satu Dzat yang berhak untuk mendapatkan pujian dan penyucian (tasbih) dengan kualitas dan kuantitas sebagaimana yang disebutkan dalam dzikir tersebut. (Fiqh Ad'iyah wa ad-Du'a, 3/41)."]},
+  {p:[
+   "Dari Juwairiyah – salah satu istri Nabi shallallahu 'alaihi wa sallam – beliau menceritakan: Sesungguhnya Nabi shallallahu 'alaihi wa sallam keluar menuju masjid ketika shalat subuh. Sementara Juwairiyah masih berada di tempat shalatnya di rumah. Kemudian Nabi shallallahu 'alaihi wa sallam pulang di waktu dhuha (matahari sudah tinggi), menemui Juwairiyah, sementara Juwairiyah masih duduk di tempat semula. Kemudian Nabi shallallahu 'alaihi wa sallam bertanya kepada Juwairiyah istrinya: \"Sejak aku tinggal tadi pagi sampai sekarang kamu belum beranjak dari tempat dudukmu?\" Juwairiyah menjawab: Ya. Kemudian Nabi shallallahu 'alaihi wa sallam memberi nasehat: \"Aku telah membaca empat kalimat sebanyak 3x. Andaikan pahala bacaan empat kalimat ini ditimbang dengan dzikir yang telah engkau baca, niscaya lebih berat empat kalimat tadi: (dzikir di atas).\"",
+   "Inilah dzikir yang sangat mulia, memiliki keutamaan dan janji pahala yang sangat besar. Senilai dengan pahala dzikir yang dibaca dari subuh sampai siang. Nabi shallallahu 'alaihi wa sallam membocorkannya kepada kita. Karena itu, jangan sampai kita sia-siakan."
+  ]}
+ ],
+ sumberAkhir:"facebook.com/doa.dzikir.shahih.harian"
+},
+{
+ id:19, judul:"Dzikir Pagi 19", jumlah:1,
+ arab:"اَللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلاً مُتَقَبَّلاً",
+ latin:"Allaahumma innii as-aluka 'ilman naafi'an, wa rizqon thoyyiban, wa 'amalan mutaqobbalan.",
+ arti:"Ya Allah, sesungguhnya aku memohon kepadaMu ilmu yang bermanfaat, rizki yang halal dan amal yang diterima.",
+ sumber:"HR. Ibnu As-Sunni dalam 'Amalul Yaum wal Lailah, no. 54 dan Ibnu Majah 925. Isnadnya hasan menurut Abdul Qadir dan Syu'aib Al-Arna'uth dalam tahqiq Zad Al-Ma'ad 2/375.",
+ catatan:[
+  {h:"Keterangan:",p:["Dari Ummu Salamah radliallahu 'anha, beliau mengatakan: \"Sesungguhnya Nabi shallallahu 'alaihi wa sallam setelah salam shalat subuh, beliau membaca: (dzikir di atas). (HR. Ahmad 6/322, Ibnu Majah 925, dan dishahihkan al-Albani).",
+   "Waktu subuh merupakan permulaan hari bagi seorang muslim. Nabi shallallahu 'alaihi wa sallam mengawali pagi hari beliau dengan memohon kepada Tuhannya tiga hal: ilmu yang bermanfaat, rizki yang halal, dan amal yang diterima.",
+   "Mengapa tiga hal ini? Karena tiga hal ini merupakan kunci kebutuhan hidup manusia."],
+   ol:[
+    "Ilmu yang bermanfaat. Ilmu yang bermanfaat adalah semua ilmu yang menjadi panduan seseorang untuk melaksanakan amal wajib atau anjuran, baik terkait dengan aqidah, ibadah, maupun muamalah. Demikian penjelasan Ibnu Hajar dalam Fathul Bari 1/141. Nabi shallallahu 'alaihi wa sallam mengawali doa di atas dengan meminta ilmu yang bermanfaat, karena dengan bekal ilmu, seseorang bisa membedakan antara yang halal dan yang haram. Dengan ilmu orang bisa membedakan mana amal shaleh dan mana amal yang kelihatannya shaleh.",
+    "Rizki yang halal. Dengan rizki yang halal, manusia bisa menjalani kehidupan dunianya dengan baik. Karena manusia hidup butuh nutrisi. Agar nutrisi ini tidak menjadi bahan pertanyaan di hari kiamat, nutrisinya harus berupa makanan yang halal. Nabi shallallahu 'alaihi wa sallam meminta rizki yang halal sebelum amal yang diterima. Karena syarat doa seseorang bisa diterima adalah rizkinya halal.",
+    {t:"Amal yang diterima. Syarat amal diterima ada tiga:",sub:[
+     "Pelakunya mukmin. Karena amal orang kafir tidak diterima.",
+     "Dilakukan dengan ikhlas. Amal yang dilakukan untuk tendensi dunia atau pujian orang lain tidak akan diterima.",
+     "Sesuai petunjuk Nabi shallallahu 'alaihi wa sallam. Tanpa ini, amal seseorang tidak akan dinilai."
+    ]}
+   ]}
+ ]
+},
+{
+ id:20, judul:"Dzikir Pagi 20", jumlah:100, dibaca:"Dibaca 100x", sumberAkhir:"facebook.com/doa.dzikir.shahih.harian",
+ arab:"سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+ latin:"Subhaanallaahi wa bihamdih.",
+ arti:"Maha Suci Allah, aku memujiNya.",
+ catatan:[
+  {h:"Keutamaan:",p:[
+   "Dari Abu Hurairah radliallahu 'anhu, Nabi shallallahu 'alaihi wa sallam bersabda: \"Barangsiapa di waktu pagi dan sore membaca: (dzikir di atas) 100x, maka tidak ada seorangpun yang datang pada hari kiamat dengan membawa pahala yang lebih baik dari pahala yang dia bawa, kecuali orang yang membaca seperti yang dia baca atau lebih banyak.\" (HR. Muslim 2692).",
+   "Dzikir ini juga dianjurkan untuk dibaca setiap hari 100x berdasarkan hadis dari Abu Hurairah radliallahu 'anhu, bahwa Nabi shallallahu 'alaihi wa sallam bersabda: \"Siapa yang membaca: (dzikir di atas) 100x dalam sehari, maka akan dihapuskan dosa-dosanya, meskipun sebanyak buih di lautan.\" (HR. Bukhari 6405 dan Muslim 484)."
+  ]}
+ ]
+},
+{
+ id:21, judul:"Dzikir Pagi 21", jumlah:100, dibaca:"Dibaca 100x dalam sehari",
+ arab:"أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ",
+ latin:"Astaghfirullaaha wa atuubu ilaih.",
+ arti:"Aku memohon ampun kepada Allah dan bertaubat kepadaNya.",
+ sumber:"HR. Al-Bukhari dengan Fathul Bari 11/101 dan Muslim 4/2075.",
+ catatan:[
+  {h:"Hadis selengkapnya:",p:["Dari Aghor bin Yasar Al Muzanni radliallahu 'anhu, bahwa beliau mendengar Nabi shallallahu 'alaihi wa sallam bersabda: \"Wahai para manusia, bertaubatlah kepada Allah! Sesungguhnya aku bertaubat kepadaNya 100x dalam sehari.\""]},
+  {h:"Keterangan:",ol:[
+   "Dzahir hadis menunjukkan bahwa Nabi shallallahu 'alaihi wa sallam meminta ampunan dan bertaubat.",
+   {t:"Bukankah Nabi shallallahu 'alaihi wa sallam orang yang ma'shum (terhindar dari dosa), lalu mengapa beliau perlu bertaubat? Ada beberapa jawaban untuk pertanyaan ini:",sub:[
+    "Ibn Batthal mengatakan: Para nabi adalah orang yang paling bersungguh-sungguh dalam beribadah, karena tingkatan makrifat (mengenal Allah) yang Allah berikan kepada mereka. Maka mereka adalah orang yang selalu istiqamah bersyukur kepadaNya, istiqamah dalam mengakui segala kekurangannya, baik kekurangan ketika melaksanakan ibadah maupun kekurangan dalam keseharian dengan melakukan hal-hal yang mubah, sehingga tidak sempat berdzikir kepada Allah.",
+    "Tujuan beliau shallallahu 'alaihi wa sallam banyak bertaubat adalah dalam rangka mengajari umatnya.",
+    "Yang dimaksud \"Nabi shallallahu 'alaihi wa sallam ma'shum\" adalah terhindar dari dosa-dosa besar atau ma'shum dari bentuk berkhianat dalam penyampaian syariat. Namun beliau tidak ma'shum dari dosa kecil dan kesalahan kecil. Sehingga beliau butuh untuk istighfar."
+   ]}
+  ]}
+ ]
+}
+ ]},
+ petang:{ nama:"Dzikir Petang", total:20, data:[
+ {
+  "id": 1,
+  "judul": "Dzikir Petang 1 (Ta'awudz)",
+  "jumlah": 1,
+  "arab": "أَعُوْذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيْمِ",
+  "latin": "A'uudzu billaahi minasy-syaithoonir-rojiim.",
+  "arti": "Aku berlindung kepada Allah dari godaan syaitan yang terkutuk."
+ },
+ {
+  "id": 2,
+  "judul": "Dzikir Petang 2 (Ayat Kursi)",
+  "jumlah": 1,
+  "arab": "اللَّهُ لَآ إِلَـٰهَ إِلَّا هُوَ الْحَىُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُۥ مَا فِى السَّمَـٰوَٰتِ وَمَا فِى الْأَرْضِ ۗ مَن ذَا الَّذِى يَشْفَعُ عِندَهُۥٓ إِلَّا بِإِذْنِهِۦ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَىْءٍ مِّنْ عِلْمِهِۦٓ إِلَّا بِمَا شَآءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَـٰوَٰتِ وَالْأَرْضَ ۖ وَلَا يَـُٔودُهُۥ حِفْظُهُمَا ۚ وَهُوَ الْعَلِىُّ الْعَظِيمُ ﴿٢٥٥﴾",
+  "arti": "Allah, tidak ada sesembahan yang berhak disembah kecuali Dia Yang Hidup Kekal lagi terus-menerus mengurus (makhluk-Nya). Tidak mengantuk dan tidak tidur. Kepunyaan-Nya apa yang di langit dan di bumi. Siapakah yang dapat memberi syafa'at di sisi Allah tanpa izin-Nya? Allah mengetahui apa-apa yang di hadapan dan di belakang mereka, dan mereka tidak mengetahui apa-apa dari ilmu Allah melainkan apa yang dikehendaki-Nya. Kursi Allah meliputi langit dan bumi, dan Allah tidak merasa berat memelihara keduanya. Dan Allah Maha Tinggi lagi Maha Besar.\n(Al-Baqarah [2]: 255).",
+  "sumber": "\"Barangsiapa membaca kalimat ini ketika pagi hari, maka ia dijaga dari (gangguan) jin hingga sore hari. Dan barangsiapa mengucapkannya ketika sore hari, maka ia dijaga dari (gangguan) jin hingga pagi hari.\" (HR. Al-Hakim 1/562. Al-Albani berpendapat hadits tersebut shahih dalam Shahih At-Targhib wat Tarhib 1/273 dan beliau menisbatkan hadits tersebut kepada An-Nasa'i dan Ath-Thabrani, beliau berkata, isnad Ath-Thabrani jayyid).",
+  "catatan": [
+   {
+    "h": "Hadits selengkapnya:",
+    "p": [
+     "Dari Ubay bin Ka'ab radliallahu 'anhu, bahwa suatu ketika ada seorang jin yang mencuri kebun kurmanya. Jin itu beliau tangkap, untuk dilaporkan kepada Nabi shallallahu 'alaihi wa sallam. Jin itupun memelas agar dilepaskan. Sebagai gantinya, dia memberikan satu wirid kepada Ubay. Jin itu mengatakan: (dzikir di atas). Barangsiapa yang membacanya ketika sore maka dia akan dilindungi dari (gangguan) kami sampai pagi. Barangsiapa yang membacanya ketika pagi maka dia akan dilindungi dari (gangguan) kami sampai sore. Kemudian, Ubay mendatangi Nabi shallallahu 'alaihi wa sallam dan menceritakan kejadian yang dia jumpai. Nabi shallallahu 'alaihi wa sallam bersabda: \"Si makhluk jelek itu benar.\" (maksud makhluk jelek adalah jin tersebut). (HR. An Nasa'i dan At Thabrani dan dishahihkan Al Albani)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 3,
+  "judul": "Dzikir Petang 3 (Al-Ikhlas)",
+  "jumlah": 3,
+  "arab": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\nقُلْ هُوَ اللَّهُ أَحَدٌ ﴿١﴾ اللَّهُ الصَّمَدُ ﴿٢﴾ لَمْ يَلِدْ وَلَمْ يُولَدْ ﴿٣﴾ وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌ ﴿٤﴾",
+  "arti": "Dengan nama Allah Yang Maha Pemurah lagi Maha Penyayang.\n(1) Katakanlah: Dialah Allah Yang Maha Esa.\n(2) Allah adalah Ilah yang bergantung kepada-Nya segala urusan.\n(3) Dia tidak beranak dan tiada pula diperanakkan.\n(4) Dan tidak ada seorang pun yang setara dengan Dia.\n(Al-Ikhlas [112]: 1-4).",
+  "sumber": "HR. Abu Dawud 4/322, At-Tirmidzi 5/567 dan lihat Shahih At-Tirmidzi 3/182.",
+  "catatan": [
+   {
+    "p": [
+     "\"Barangsiapa membaca tiga surat tersebut (surat Al-Ikhlas, Al-Falaq dan An-Naas, ketiganya dinamakan Al-Mu'awwidzaat) sebanyak 3x setiap pagi dan sore hari, maka itu (tiga surat tersebut) cukup baginya dari segala sesuatu.\" (Yaitu melindunginya dari segala bentuk bahaya dengan izin Allah)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 4,
+  "judul": "Dzikir Petang 4 (Al-Falaq)",
+  "jumlah": 3,
+  "arab": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\nقُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ﴿١﴾ مِن شَرِّ مَا خَلَقَ ﴿٢﴾ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ﴿٣﴾ وَمِن شَرِّ النَّفَّـٰثَـٰتِ فِى الْعُقَدِ ﴿٤﴾ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ ﴿٥﴾",
+  "arti": "Dengan nama Allah Yang Maha Pemurah lagi Maha Penyayang.\n(1) Katakanlah: Aku berlindung kepada Rabb yang menguasai Subuh.\n(2) Dari kejahatan makhluk-Nya.\n(3) Dan dari kejahatan malam apabila telah gelap gulita.\n(4) Dan dari kejahatan wanita-wanita tukang sihir yang menghembus pada buhul-buhul.\n(5) Dan dari kejahatan orang yang dengki apabila ia dengki.\n(Al-Falaq [113]: 1-5).",
+  "sumber": "HR. Abu Dawud 4/322, At-Tirmidzi 5/567 dan lihat Shahih At-Tirmidzi 3/182.",
+  "catatan": [
+   {
+    "p": [
+     "\"Barangsiapa membaca tiga surat tersebut (surat Al-Ikhlas, Al-Falaq dan An-Naas, ketiganya dinamakan Al-Mu'awwidzaat) sebanyak 3x setiap pagi dan sore hari, maka itu (tiga surat tersebut) cukup baginya dari segala sesuatu.\" (Yaitu melindunginya dari segala bentuk bahaya dengan izin Allah)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 5,
+  "judul": "Dzikir Petang 5 (An-Naas)",
+  "jumlah": 3,
+  "arab": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\nقُلْ أَعُوذُ بِرَبِّ النَّاسِ ﴿١﴾ مَلِكِ النَّاسِ ﴿٢﴾ إِلَـٰهِ النَّاسِ ﴿٣﴾ مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ﴿٤﴾ الَّذِى يُوَسْوِسُ فِى صُدُورِ النَّاسِ ﴿٥﴾ مِنَ الْجِنَّةِ وَالنَّاسِ ﴿٦﴾",
+  "arti": "Dengan nama Allah Yang Maha Pemurah lagi Maha Penyayang.\n(1) Katakanlah: Aku berlindung kepada Rabb manusia.\n(2) Raja manusia.\n(3) Sembahan manusia.\n(4) Dari kejahatan (bisikan) syaitan yang biasa bersembunyi.\n(5) Yang membisikkan (kejahatan) ke dalam dada manusia.\n(6) Dari jin dan manusia.\n(An-Nas [114]: 1-6).",
+  "sumber": "HR. Abu Dawud 4/322, At-Tirmidzi 5/567 dan lihat Shahih At-Tirmidzi 3/182.",
+  "catatan": [
+   {
+    "p": [
+     "\"Barangsiapa membaca tiga surat tersebut (surat Al-Ikhlas, Al-Falaq dan An-Naas, ketiganya dinamakan Al-Mu'awwidzaat) sebanyak 3x setiap pagi dan sore hari, maka itu (tiga surat tersebut) cukup baginya dari segala sesuatu.\" (Yaitu melindunginya dari segala bentuk bahaya dengan izin Allah)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 6,
+  "judul": "Dzikir Petang 6",
+  "jumlah": 1,
+  "arab": "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لاَ إِلَـهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ. رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَـٰذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَـٰذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
+  "latin": "Amsainaa wa amsal mulku lillaah, wal hamdulillaah, laa ilaaha illallaah, wahdahu laa syariika lah, lahul mulku wa lahul hamd, wa huwa 'alaa kulli syai-in qodiir. Robbi as-aluka khoiro maa fii haadzihil-lailati wa khoiro maa ba'dahaa, wa a'uudzu bika min syarri maa fii haadzihil-lailati wa syarri maa ba'dahaa, robbi a'uudzu bika minal kasali wa suu-il kibar, robbi a'uudzu bika min 'adzaabin fin-naari wa 'adzaabin fil qobr.",
+  "arti": "Kami telah memasuki waktu sore dan kerajaan hanya milik Allah, segala puji bagi Allah. Tidak ada sesembahan yang berhak disembah kecuali Allah, Yang Maha Esa, tiada sekutu bagiNya. Bagi-Nya kerajaan dan bagiNya pujian. Dia-lah Yang Mahakuasa atas segala sesuatu. Hai Tuhan, aku mohon kepada-Mu kebaikan di malam ini dan kebaikan sesudahnya. Aku berlindung kepadaMu dari kejahatan malam ini dan kejahatan sesudahnya. Wahai Tuhan, aku berlindung kepadaMu dari kemalasan dan kejelekan di hari tua. Wahai Tuhan, aku berlindung kepadaMu dari siksaan di Neraka dan kubur.",
+  "sumber": "HR. Muslim 4/2088.",
+  "catatan": [
+   {
+    "h": "Keterangan:",
+    "ol": [
+     "Doa di atas berdasarkan hadis dari Ibnu Mas'ud radliallahu 'anhu, bahwa Nabi shallallahu 'alaihi wa sallam ketika sore membaca: (doa di atas).",
+     "Doa di atas menunjukkan sikap ketundukan seorang muslim kepada Allah. Dia mengawali paginya atau sore harinya dengan ikrar dan berbagai pengakuan. Dia berikrar tentang keabadian kerajaan Allah. Dia memuji Allah di waktu paginya. Dia berikrar tentang laa ilaaha illallaah, dan beberapa ikrar lainnya. Kemudian diikuti dengan berdoa, memohon kepada Allah agar diberi kebaikan pada malam atau hari itu, dan dilindungi dari segala bentuk keburukan pada malam atau hari itu. Yang bisa jadi tidak kita ketahui dan datang tanpa disangka-sangka.",
+     "Kemudian seorang muslim memohon perlindungan dari penyebab keburukan, yaitu sikap malas dan dampak dari sikap malas, yaitu kondisi buruk di hari tua. Di penghujung doa ini, seorang muslim berlindung kepada Allah dari siksa hari akhir, yaitu siksa kubur dan siksa neraka."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 7,
+  "judul": "Dzikir Petang 7",
+  "jumlah": 1,
+  "arab": "اَللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ",
+  "latin": "Allaahumma bika amsainaa, wa bika ash-bahnaa, wa bika nahyaa, wa bika namuutu, wa ilaikal mashiir.",
+  "arti": "Ya Allah, dengan rahmat dan pertolonganMu kami memasuki waktu sore, dan dengan rahmat dan pertolonganMu kami memasuki waktu pagi. Dengan rahmat dan pertolonganMu kami hidup dan dengan kehendakMu kami mati. Dan kepadaMu tempat kembali (bagi semua makhluk).",
+  "sumber": "HR. At Turmudzi 3391 dan dishahihkan Al-Albani.",
+  "catatan": [
+   {
+    "h": "Keterangan:",
+    "p": [
+     "Dari Abu Hurairah radliallahu 'anhu, beliau berkata: Ketika masuk waktu pagi, Nabi shallallahu 'alaihi wa sallam biasa membaca: 'Allahumma bika ashbahnaa…' dan ketika sore beliau membaca: 'Allahumma bika amsainaa…'."
+    ]
+   },
+   {
+    "p": [
+     "Doa di atas menunjukkan betapa orang yang membacanya adalah orang yang sangat pasrah kepada Allah. Dia mengakui bahwa dirinya mampu hidup di hari itu, semata karena nikmat dari Allah ta'ala. Dia senantiasa dalam kondisi mengakui hal itu selama hidup dan matinya. Dia juga mengakui bahwa dia bakal kembali kepada Allah ta'ala."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 8,
+  "judul": "Dzikir Petang 8 (Sayyidul Istighfar)",
+  "jumlah": 1,
+  "arab": "اَللَّهُمَّ أَنْتَ رَبِّي، لاَ إِلَـهَ إِلاَّ أَنْتَ، خَلَقْتَنِي، وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي، فَاغْفِرْ لِي، فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ",
+  "latin": "Allaahumma anta robbii, laa ilaaha illaa anta, kholaqtanii, wa anaa 'abduka, wa anaa 'alaa 'ahdika wa wa'dika mas-tatho'tu, a'uudzu bika min syarri maa shona'tu, abuu-u laka bini'matika 'alayya, wa abuu-u laka bi-dzanbii, faghfir lii, fa-innahu laa yagh-firudz-dzunuuba illaa anta.",
+  "arti": "Ya Allah, Engkau adalah Tuhanku, tidak ada sesembahan yang berhak disembah kecuali Engkau, Engkaulah yang menciptakan aku. Aku adalah hambaMu. Aku akan setia pada perjanjianku denganMu semampuku. Aku berlindung kepadaMu dari kejelekan yang kuperbuat. Aku mengakui nikmatMu kepadaku dan aku mengakui dosaku, oleh karena itu, ampunilah aku. Sesungguhnya tiada yang mengampuni dosa kecuali Engkau.",
+  "sumber": "HR. Al Bukhari no. 5522, 6306 dan 6323, at-Tirmidzi no. 3393, an-Nasa'i no. 5522 dan lain-lain.",
+  "catatan": [
+   {
+    "h": "Keutamaan:",
+    "p": [
+     "Dari Syaddad bin Aus radhiallahu 'anhu bahwa Nabi shallallahu 'alaihi wa salam bersabda, \"Sayyidul Istighfar adalah bacaan: (doa di atas).\" Kemudian beliau menyebutkan keutamaannya, \"Barangsiapa yang membaca doa ini dengan penuh keyakinan di sore hari, kemudian dia mati pada malam harinya (sebelum pagi) maka dia termasuk ahli surga. Dan barangsiapa yang membacanya dengan penuh keyakinan di pagi hari, kemudian dia mati pada siang harinya (sebelum sore) maka dia termasuk ahli surga.\""
+    ]
+   },
+   {
+    "h": "Keterangan:",
+    "p": [
+     "Dinamakan Sayyidul Istighfar, karena bacaan istighfar di atas adalah lafal istighfar yang paling mulia dibandingkan lafal istighfar lainnya. Dalam lafal istighfar ini, terdapat 8 aspek yang menjadikan istighfar ini memiliki keutamaan yang besar:"
+    ],
+    "ol": [
+     "Dimulai dengan pujian kepada Allah.",
+     "Adanya pengakuan bahwa dirinya adalah hamba Allah, makhluk Allah yang berusaha menghambakan dirinya kepada Allah.",
+     "Mengimani adanya janji Allah, sehingga sang hamba sangat berpijak pada ikrarnya untuk mendapatkan janji Tuhannya.",
+     "Pengakuan akan kekurangan dirinya, dengan sekaligus memohon perlindungan kepada Tuhannya dari keburukan dirinya.",
+     "Pengakuan terhadap banyaknya nikmat yang telah Allah berikan kepada dirinya, yang ini mewakili rasa syukur.",
+     "Pengakuan terhadap banyaknya dosa dan kelancangannya, yang ini merupakan bentuk taubatnya.",
+     "Diakhiri dengan permohonan ampunan yang setulusnya kepada Allah.",
+     "Dengan keyakinan, tidak ada Dzat yang mampu mengampuni dosa-dosa hamba kecuali Allah, Sang Maha Kasih Sayang."
+    ]
+   },
+   {
+    "p": [
+     "(Fiqh al-Adiyah, 3/15)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 9,
+  "judul": "Dzikir Petang 9",
+  "jumlah": 3,
+  "arab": "اَللَّهُمَّ عَافِنِي فِي بَدَنِي، اَللَّهُمَّ عَافِنِي فِي سَمْعِي، اَللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَـهَ إِلاَّ أَنْتَ. اَللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، اَللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لاَ إِلَـهَ إِلاَّ أَنْتَ",
+  "latin": "Allaahumma 'aafinii fii badanii, allaahumma 'aafinii fii sam'ii, allaahumma 'aafinii fii bashorii, laa ilaaha illaa anta. Allaahumma innii a'uudzu bika minal kufri wal faqr, allaahumma innii a'uudzu bika min 'adzaabil qobr, laa ilaaha illaa anta.",
+  "arti": "Ya Allah, selamatkan tubuhku (dari penyakit dan yang tidak aku inginkan). Ya Allah, selamatkan pendengaranku (dari penyakit dan maksiat atau sesuatu yang tidak aku inginkan). Ya Allah, selamatkan penglihatanku, tidak ada sesembahan yang berhak disembah kecuali Engkau. Ya Allah, sesungguhnya aku berlindung kepadaMu dari kekufuran dan kefakiran. Ya Allah, aku berlindung kepadaMu dari siksa kubur, tidak ada sesembahan yang berhak disembah kecuali Engkau.",
+  "sumber": "HR. Abu Dawud 4/324, Ahmad 5/42, An-Nasai dalam 'Amalul Yaum wal Lailah no. 22, halaman 146, Ibnus Sunni no. 69. Al-Bukhari dalam Al-Adabul Mufrad. Syaikh Abdul Aziz bin Baaz menyatakan sanad hadits tersebut hasan. Lihat juga Tuhfatul Akhyar, halaman 26.",
+  "catatan": [
+   {
+    "h": "Keterangan:",
+    "p": [
+     "Di awal dzikir disebutkan badan, kemudian disebutkan pendengaran dan penglihatan, padahal pendengaran dan penglihatan termasuk anggota badan. Ini menunjukkan keutamaan pendengaran dan penglihatan. Disamping kedua indra tersebut merupakan jalan masuknya ilmu."
+    ]
+   },
+   {
+    "h": "Hadis selengkapnya:",
+    "p": [
+     "Dari Abdurrahman bin Abi Bakrah, bahwa dia bertanya kepada bapaknya: Wahai ayahku, aku selalu mendengar engkau membaca: (dzikir di atas), dan engkau mengulanginya 3x setiap pagi dan 3x setiap sore. Kemudian Abu Bakrah radliallahu 'anhu mengatakan: Aku mendengar Rasulullah shallallahu 'alaihi wa sallam membaca doa ini, dan aku senang meniru sunnah beliau."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 10,
+  "judul": "Dzikir Petang 10",
+  "jumlah": 1,
+  "arab": "اَللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالآخِرَةِ، اَللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اَللَّهُمَّ اسْتُرْ عَوْرَاتِي، وَآمِنْ رَوْعَاتِي، اَللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ، وَمِنْ خَلْفِي، وَعَنْ يَمِينِي، وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي",
+  "latin": "Allaahumma innii as-alukal 'afwa wal 'aafiyata fid-dunyaa wal aakhiroh, allaahumma innii as-alukal 'afwa wal 'aafiyata fii dinii, wa dunyaaya, wa ahlii, wa maalii, allaahummas-tur 'aurootii, wa aamin rou'aatii, allaahummah-fazhnii min baini yadayya, wa min kholfii, wa 'an yamiinii, wa 'an syimaalii, wa min fauqii, wa a'uudzu bi'azhomatika an ugh-taala min tahtii.",
+  "arti": "Ya Allah, sesungguhnya aku memohon maaf (ampunan) dan keselamatan di dunia dan akhirat. Ya Allah, sesungguhnya aku memohon maaf (ampunan) dan keselamatan dalam agama, dunia, keluarga dan hartaku. Ya Allah, tutupilah auratku (aurat badan, cacat, aib dan sesuatu yang tidak layak dilihat orang) dan tenteramkanlah aku dari rasa takut. Ya Allah, peliharalah aku dari muka, belakang, kanan, kiri dan atasku. Aku berlindung dengan kebesaranMu, agar aku tidak disambar dari bawahku (oleh ulat, tenggelam atau ditelan bumi dan lain-lain).",
+  "catatan": [
+   {
+    "h": "Keutamaan:",
+    "ol": [
+     "Dari Ibn Umar radliallahu 'anhuma, bahwa beliau mendengar Nabi shallallahu 'alaihi wa sallam membaca wirid ini ketika pagi dan sore, dan beliau tidak pernah meninggalkannya sampai beliau meninggal dunia: (dzikir di atas). (HR. Abu Daud, Ibn Majah dan dishahihkan Al Albani).",
+     "Dari Abbas bin Abdul Muthallib, beliau bertanya kepada Nabi shallallahu 'alaihi wa sallam: Ya Rasulullah, ajarilah aku doa yang harus aku panjatkan kepada Allah. Nabi shallallahu 'alaihi wa sallam bersabda: \"Wahai Abbas, mintalah al afiyah (terbebas dari masalah) kepada Allah.\" Kemudian, setelah tiga hari, Abbas datang lagi dan mengatakan: Ya Rasulullah, ajarilah aku doa yang harus aku panjatkan kepada Allah. Nabi shallallahu 'alaihi wa sallam bersabda: \"Wahai Abbas, wahai pamanku, mintalah kepada Allah al afiyah (terbebas dari masalah) di dunia dan akhirat.\" (HR. Al Bukhari dalam Adabul Mufrad dan dishahihkan Al Albani).",
+     "Dari Anas bin Malik radliallahu 'anhu, bahwasanya ada seorang yang datang kepada Nabi shallallahu 'alaihi wa sallam dan bertanya: Ya Rasulullah, doa apa yang paling afdhal? Beliau menjawab: \"Mintalah kepada Allah al afiyah (terbebas dari masalah) di dunia dan akhirat.\" Kemudian besoknya dia datang lagi dan bertanya: Wahai Nabi Allah, doa apa yang paling afdhal? Beliau menjawab: \"Mintalah kepada Allah al afiyah (terbebas dari masalah) di dunia dan akhirat. Karena jika engkau diberi al afiyah di dunia dan akhirat berarti kamu beruntung.\" (HR. Al Bukhari dalam Adabul Mufrad dan dishahihkan Al Albani)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 11,
+  "judul": "Dzikir Petang 11",
+  "jumlah": 1,
+  "arab": "اَللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ، فَاطِرَ السَّمَاوَاتِ وَالأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لاَ إِلَـهَ إِلاَّ أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءًا، أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ",
+  "latin": "Allaahumma 'aalimal ghoibi wasy-syahaadati, faathiros-samaawaati wal ardh, robba kulli syai-in wa maalikahu, asyhadu al-laa ilaaha illaa anta, a'uudzu bika min syarri nafsii, wa min syarrisy-syaithooni wa syirkih, wa an aqtarifa 'alaa nafsii suu-an, au ajurrohu ilaa muslim.",
+  "arti": "Ya Allah, yang Maha Mengetahui yang ghaib dan yang nyata, wahai Tuhan pencipta langit dan bumi, Tuhan segala sesuatu dan yang merajainya. Aku bersaksi bahwa tidak ada sesembahan yang berhak disembah kecuali Engkau. Aku berlindung kepadaMu dari kejahatan diriku, setan dan balatentaranya, dan aku (berlindung kepadaMu) dari berbuat kejelekan terhadap diriku atau mendorongnya kepada seorang muslim.",
+  "sumber": "HR. At-Tirmidzi dan Abu Dawud. Lihat kitab Shahih At-Tirmidzi 3/142.",
+  "catatan": [
+   {
+    "h": "Hadis selengkapnya:",
+    "p": [
+     "Dari Abu Hurairah radliallahu 'anhu, bahwa Abu Bakr As Siddiq berkata kepada Nabi shallallahu 'alaihi wa sallam: Tunjukkanlah aku beberapa kalimat, yang aku baca setiap pagi dan sore. Kemudian beliau bersabda: \"Bacalah: (doa di atas). Baca doa ini setiap pagi, sore, dan ketika hendak tidur.\""
+    ]
+   },
+   {
+    "h": "Sisi penting dzikir ini:",
+    "ol": [
+     "Dzikir ini permintaan sahabat yang paling mulia: Abu Bakr as-Shiddiq radliallahu 'anhu.",
+     "Dzikir ini diajarkan oleh manusia paling mulia, Rasulullah shallallahu 'alaihi wa sallam.",
+     "Memulai doa dengan memuji Allah, Dialah Dzat yang mengetahui segala sesuatu dan pemilik segala sesuatu.",
+     "Pengakuan bahwa tidak ada sesembahan yang berhak disembah kecuali Allah.",
+     "Doa memohon perlindungan dari segala bentuk keburukan: sumbernya dan dampaknya. Sumber keburukan ada 2: nafsu manusia dan godaan setan. Dampak keburukan ada 2: dampak untuk diri sendiri dan dampak bagi orang lain."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 12,
+  "judul": "Dzikir Petang 12",
+  "jumlah": 3,
+  "arab": "بِسْمِ اللَّهِ الَّذِي لاَ يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَلاَ فِي السَّمَاءِ، وَهُوَ السَّمِيعُ الْعَلِيمُ",
+  "latin": "Bismillaahil-ladzii laa yadhurru ma'as-mihi syai-un, fil ardhi wa laa fis-samaa', wa huwas-samii'ul 'aliim.",
+  "arti": "Dengan nama Allah, yang tidak akan berbahaya dengan namaNya, segala sesuatu di bumi dan langit, Dia-lah Yang Maha Mendengar lagi Maha Mengetahui.",
+  "sumber": "HR. Abu Dawud 4/323, At-Tirmidzi 5/465, Ibnu Majah dan Ahmad. Lihat Shahih Ibnu Majah 2/332, Al-Allamah Ibnu Baaz berpendapat, isnad hadits tersebut hasan dalam Tuhfatul Akhyar hal. 39.",
+  "catatan": [
+   {
+    "h": "Keutamaan:",
+    "p": [
+     "Dari Utsman bin Affan radliallahu 'anhu, beliau mendengar Nabi shallallahu 'alaihi wa sallam bersabda: Siapa yang setiap pagi dan sore membaca doa ini 3x: (doa di atas), maka dia tidak ada sesuatupun yang membahayakan dirinya.",
+     "Suatu ketika Aban bin Utsman salah satu sisi tubuhnya mengalami kelumpuhan. Tiba-tiba ada seseorang yang melihatnya (keheranan). Aban marah: Kenapa lihat-lihat. Hadis tentang bacaan di atas telah aku sampaikan, namun hari ini aku lupa mengucapkannya, agar takdir Allah ini mengenai diriku.",
+     "Imam al-Qurthubi mengatakan: Ini adalah hadis yang shahih, perkataan yang benar. Saya meyakini kebenarannya dari dalil dan terbukti di dunia nyata. Sejak saya mendengar hadis ini, saya selalu mengamalkannya, sehingga tidak hal berbahaya yang mengenai diriku, kecuali jika aku lupa membacanya. Suatu ketika di madinah, saya disengat kalajengking. Kemudian aku ingat-ingat, ternyata aku lupa membaca dzikir tersebut. (al-Futuhat ar-Rabbaniyah, 3/100)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 13,
+  "judul": "Dzikir Petang 13",
+  "jumlah": 3,
+  "arab": "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالإِسْلاَمِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا",
+  "latin": "Rodhiitu billaahi robbaa, wa bil islaami diinaa, wa bimuhammadin shollallaahu 'alaihi wa sallama nabiyyaa.",
+  "arti": "Aku rela Allah sebagai Tuhanku, Islam sebagai agamaku dan Muhammad shallallahu 'alaihi wa sallam sebagai nabiku (yang diutus oleh Allah).",
+  "sumber": "HR. Ahmad 4/337, An-Nasa'i dalam 'Amalul Yaum wal Lailah no. 4 dan Ibnus Sunni no. 68. Abu Daud 4/418, At-Tirmidzi 5/465 dan Ibnu Baaz berpendapat, hadits tersebut hasan dalam Tuhfatul Akhyar hal. 39.",
+  "catatan": [
+   {
+    "p": [
+     "\"Barangsiapa membacanya sebanyak 3x ketika pagi dan sore hari, maka hak Allah memberikan keridhaanNya kepadanya pada hari Kiamat.\""
+    ]
+   },
+   {
+    "h": "Keterangan:",
+    "ol": [
+     "Aku rela Allah sebagai Tuhanku: Aku cukupkan diriku untuk hanya meminta kepadaNya, beribadah kepadaNya, tidak ada sesembahan yang berhak disembah kecuali Dia.",
+     "Aku rela islam sebagai agamaku: aku tidak menempuh jalan hidup kecuali yang sesuai dengan syariat islam."
+    ]
+   },
+   {
+    "h": "Keutamaan:",
+    "p": [
+     "Dari Tsauban bin Bujdud radliallahu 'anhu, pelayan Nabi shallallahu 'alaihi wa sallam, bahwa beliau mendengar Nabi shallallahu 'alaihi wa sallam bersabda: \"Apabila seorang hamba di pagi dan sore hari membaca doa ini 3x: (dzikir di atas), maka telah menjadi kewajiban Allah untuk meridlainya pada hari kiamat.\" (HR. Ahmad, Abu Daud, Ibn Majah dan sanadnya dihasankan Syaikh Ibn Baz dalam Tuhfatul Ahyar).",
+     "Makna \"menjadi kewajiban Allah\": Allah wajibkan diriNya sendiri untuk melaksanakannya."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 14,
+  "judul": "Dzikir Petang 14",
+  "jumlah": 1,
+  "sumberAkhir": "facebook.com/doa.dzikir.shahih.harian",
+  "arab": "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلاَ تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
+  "latin": "Yaa hayyu yaa qoyyuum, birohmatika astaghiits, ashlih lii sya'nii kullah, wa laa takilnii ilaa nafsii thorfata 'ain.",
+  "arti": "Wahai Tuhan Yang Maha Hidup, wahai Tuhan Yang Berdiri Sendiri (tidak butuh segala sesuatu), dengan rahmat-Mu aku minta pertolongan, perbaikilah segala urusanku, dan jangan Kau serahkan kepadaku meskipun sekejap mata (tanpa mendapat pertolongan dariMu).",
+  "sumber": "HR. An-Nasa'i dalam Sunan al-Kubro, Al-Hakim dalam al-Mustadzrak, Al-Baihaqi dalam Asma wa shifat dan dishahihkan Al Albani dalam Silsilah as-Shahihah no. 227).",
+  "catatan": [
+   {
+    "h": "Hadis selengkapnya:",
+    "p": [
+     "Dari Anas bin Malik radliallahu 'anhu, bahwa beliau mendengar Nabi shallallahu 'alaihi wa sallam bersabda kepada Fatimah: \"Apa yang menghalangimu untuk mendengarkan nasehatku, bacalah ketika pagi dan sore hari: (dzikir di atas).\""
+    ]
+   }
+  ]
+ },
+ {
+  "id": 15,
+  "judul": "Dzikir Petang 15",
+  "jumlah": 1,
+  "arab": "أَمْسَيْنَا عَلَى فِطْرَةِ الإِسْلاَمِ، وَعَلَى كَلِمَةِ الإِخْلاَصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ، حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
+  "latin": "Amsainaa 'alaa fithrotil islaam, wa 'alaa kalimatil ikhlaash, wa 'alaa diini nabiyyinaa muhammadin shollallaahu 'alaihi wa sallam, wa 'alaa millati abiinaa ibroohiim, haniifan musliman wa maa kaana minal musyrikiin.",
+  "arti": "Di waktu sore kami berada di atas fitrah Islam, kalimat ikhlas, agama Nabi kami Muhammad, dan agama ayah kami Ibrahim, yang berdiri di atas jalan yang lurus, muslim dan tidak tergolong orang-orang musyrik.",
+  "sumber": "HR. Ahmad 3/406-407, 5/123. Lihat juga Shahihul Jami' 4/290. Ibnus Sunni juga meriwayatkannya di 'Amalul Yaum wal Lailah no. 34.",
+  "catatan": [
+   {
+    "h": "Keterangan kalimat:",
+    "ol": [
+     "Fitrah islam: Agama yang benar. Terkadang kata fitrah bermakna sunnah (ajaran).",
+     "Kalimat ikhlas: Dua kalimat syahadat."
+    ]
+   },
+   {
+    "h": "Hadis selengkapnya:",
+    "p": [
+     "Dari Abdurrahman bin Abu Abza radliallahu 'anhu, bahwa Nabi shallallahu 'alaihi wa sallam ketika pagi dan sore, beliau membaca: (dzikir di atas). (HR. Ahmad dan dishahihkan Al Albani)."
+    ]
+   },
+   {
+    "h": "Pesan:",
+    "p": [
+     "Inilah keindahan akhlak seorang mukmin… dia awali pagi harinya dengan kalimat mulia nan penuh berkah. Dia membuka lembaran pagi harinya dengan memperbarui imannya, menyatakan ikrar tauhid, komitmen terhadap agama Nabi Muhammad shallallahu 'alaihi wa sallam dan mengikuti ajaran Ibrahim – al-Hanifiyah as-Samhah – serta menjauh dari segala kesyirikan apapun bentuknya."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 16,
+  "judul": "Dzikir Petang 16",
+  "jumlah": 10,
+  "dibaca": "Dibaca 10x, atau 1x saat malas",
+  "arab": "لاَ إِلَـهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+  "latin": "Laa ilaaha illallaah, wahdahu laa syariika lah, lahul mulku wa lahul hamdu, wa huwa 'alaa kulli syai-in qodiir.",
+  "arti": "Tidak ada sesembahan yang berhak disembah kecuali Allah, Yang Maha Esa, tiada sekutu bagi-Nya. Bagi-Nya kerajaan dan bagi-Nya pujian. Dan Dia Maha Kuasa atas segala sesuatu.",
+  "sumber": "HR. Abu Dawwud 4/319, Ibnu Majah dan Ahmad 4/60. Lihat Shahih At-Targhib wat Tarhib 1/270, Shahih Abu Dawud 3/957, Shahih Ibnu Majah 2/331 dan Zadul Ma'ad 2/377.",
+  "catatan": [
+   {
+    "h": "Keutamaan:",
+    "ol": [
+     "Dibaca 1x. Dari Abu Ayyasy radliallahu 'anhu, Nabi shallallahu 'alaihi wa sallam bersabda, \"Barangsiapa di waktu pagi membaca: (dzikir di atas), nilainya seperti seorang budak keturunan Nabi Ismail, dicatat baginya 10 kebaikan, dihapuskan darinya 10 kesalahan, dan diangkat derajatnya 10 tingkatan, serta dia dalam perlindungan dari setan sampai sore. Demikian pula ketika sore, dia membacanya dan dijaga sampai pagi.\" (HR. Ahmad, Abu Daud, Ibn Majah dan dishahihkan Al Albani).",
+     "Dibaca 10x. Dari Abu Ayyub Al Anshari radliallahu 'anhu, Nabi shallallahu 'alaihi wa sallam bersabda, \"Barangsiapa di waktu pagi membaca: (dzikir di atas) 10x, nilainya seperti 4 budak, dicatat untuknya 10 kebaikan, dihapuskan darinya 10 kesalahan, diangkat derajatnya 10 tingkatan, dan bacaan itu menjadi perlindungan baginya dari setan sampai sore. Dan jika ada orang yang membacanya setelah maghrib, dia juga mendapatkan hal yang sama.\" (HR. Ahmad, Abu Daud, An Nasa'i dan dishahihkan Al Albani)."
+    ]
+   },
+   {
+    "h": "Penjelasan kalimat:",
+    "p": [
+     "Keturunan Nabi Ismail: Merupakan keturunan terbaik."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 17,
+  "judul": "Dzikir Petang 17",
+  "jumlah": 100,
+  "dibaca": "Dibaca 100x dalam sehari",
+  "arab": "لاَ إِلَـهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+  "latin": "Laa ilaaha illallaah, wahdahu laa syariika lah, lahul mulku wa lahul hamdu, wa huwa 'alaa kulli syai-in qodiir.",
+  "arti": "Tidak ada sesembahan yang berhak disembah kecuali Allah, Yang Maha Esa, tiada sekutu bagi-Nya. Bagi-Nya kerajaan dan bagi-Nya pujian. Dan Dia Maha Kuasa atas segala sesuatu.",
+  "sumber": "HR. Al-Bukhari 4/95 dan Muslim 4/2071.",
+  "catatan": [
+   {
+    "h": "Keutamaan:",
+    "p": [
+     "Dari Abu Hurairah radliallahu 'anhu, bahwa Nabi shallallahu 'alaihi wa sallam bersabda, \"Barangsiapa yang membaca (dzikir di atas) 100x dalam sehari, maka itu senilai 10 budak, dicatat untuknya 100 kebaikan, dihapuskan darinya 100 kesalahan, dan bacaan itu menjadi perlindungan dari setan pada hari itu sampai sore, serta tidak ada seorangpun yang datang (pada hari kiamat) dengan membawa pahala yang lebih baik dari pahala yang dia bawa, kecuali orang yang membaca lebih banyak.\" (HR. Al Bukhari dan Muslim)."
+    ]
+   },
+   {
+    "h": "Penjelasan kalimat:",
+    "ol": [
+     "100x dalam sehari: Imam An Nawawi mengatakan: Dlahir hadis menunjukkan bahwa pahala yang disebutkan bisa didapatkan oleh orang yang membaca dzikir ini 100x dalam sehari, baik dia baca 100 sekaligus atau terpisah-pisah di beberapa tempat, atau dia baca sebagian di pagi hari dan sebagian di sore hari. Namun yang afdhal, dia baca 100 sekaligus di pagi hari, agar bisa menjadi perlindungan baginya dari setan sehari penuh. Demikian pula jika dia baca di awal malam maka menjadi perlindungan baginya semalam penuh. (Tuhfatul Ahwadzi).",
+     "Orang yang membaca lebih banyak: An Nawawi mengatakan: Ini dalil bahwa orang yang membaca tahlil lebih dari 100 dalam sehari maka dia mendapatkan pahala 100 tahlil sebagaimana disebutkan dalam hadis, disamping dia mendapat pahala tahlil tambahannya. (Tuhfatul Ahwadzi)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 18,
+  "judul": "Dzikir Petang 18",
+  "jumlah": 100,
+  "dibaca": "Dibaca 100x",
+  "sumberAkhir": "facebook.com/doa.dzikir.shahih.harian",
+  "arab": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+  "latin": "Subhaanallaahi wa bihamdih.",
+  "arti": "Maha Suci Allah, aku memujiNya.",
+  "catatan": [
+   {
+    "h": "Keutamaan:",
+    "p": [
+     "Dari Abu Hurairah radliallahu 'anhu, Nabi shallallahu 'alaihi wa sallam bersabda: \"Barangsiapa di waktu pagi dan sore membaca: (dzikir di atas) 100x, maka tidak ada seorangpun yang datang pada hari kiamat dengan membawa pahala yang lebih baik dari pahala yang dia bawa, kecuali orang yang membaca seperti yang dia baca atau lebih banyak.\" (HR. Muslim 2692).",
+     "Dzikir ini juga dianjurkan untuk dibaca setiap hari 100x berdasarkan hadis dari Abu Hurairah radliallahu 'anhu, bahwa Nabi shallallahu 'alaihi wa sallam bersabda: \"Siapa yang membaca: (dzikir di atas) 100x dalam sehari, maka akan dihapuskan dosa-dosanya, meskipun sebanyak buih di lautan.\" (HR. Bukhari 6405 dan Muslim 484)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": 19,
+  "judul": "Dzikir Petang 19",
+  "jumlah": 100,
+  "dibaca": "Dibaca 100x dalam sehari",
+  "arab": "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ",
+  "latin": "Astaghfirullaaha wa atuubu ilaih.",
+  "arti": "Aku memohon ampun kepada Allah dan bertaubat kepadaNya.",
+  "sumber": "HR. Al-Bukhari dengan Fathul Bari 11/101 dan Muslim 4/2075.",
+  "catatan": [
+   {
+    "h": "Hadis selengkapnya:",
+    "p": [
+     "Dari Aghor bin Yasar Al Muzanni radliallahu 'anhu, bahwa beliau mendengar Nabi shallallahu 'alaihi wa sallam bersabda: \"Wahai para manusia, bertaubatlah kepada Allah! Sesungguhnya aku bertaubat kepadaNya 100x dalam sehari.\""
+    ]
+   },
+   {
+    "h": "Keterangan:",
+    "ol": [
+     "Dzahir hadis menunjukkan bahwa Nabi shallallahu 'alaihi wa sallam meminta ampunan dan bertaubat.",
+     {
+      "t": "Bukankah Nabi shallallahu 'alaihi wa sallam orang yang ma'shum (terhindar dari dosa), lalu mengapa beliau perlu bertaubat? Ada beberapa jawaban untuk pertanyaan ini:",
+      "sub": [
+       "Ibn Batthal mengatakan: Para nabi adalah orang yang paling bersungguh-sungguh dalam beribadah, karena tingkatan makrifat (mengenal Allah) yang Allah berikan kepada mereka. Maka mereka adalah orang yang selalu istiqamah bersyukur kepadaNya, istiqamah dalam mengakui segala kekurangannya, baik kekurangan ketika melaksanakan ibadah maupun kekurangan dalam keseharian dengan melakukan hal-hal yang mubah, sehingga tidak sempat berdzikir kepada Allah.",
+       "Tujuan beliau shallallahu 'alaihi wa sallam banyak bertaubat adalah dalam rangka mengajari umatnya.",
+       "Yang dimaksud \"Nabi shallallahu 'alaihi wa sallam ma'shum\" adalah terhindar dari dosa-dosa besar atau ma'shum dari bentuk berkhianat dalam penyampaian syariat. Namun beliau tidak ma'shum dari dosa kecil dan kesalahan kecil. Sehingga beliau butuh untuk istighfar."
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": 20,
+  "judul": "Dzikir Petang 20",
+  "jumlah": 3,
+  "arab": "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+  "latin": "A'uudzu bi kalimaatillaahit-taammaati min syarri maa khalaq.",
+  "arti": "Aku berlindung dengan kalimat-kalimat Allah yang sempurna, dari kejahatan makhluk yang diciptakanNya.",
+  "sumber": "HR. Ahmad 2/290, An-Nasa'i dalam 'Amalul Yaum wal Lailah, no. 590 dan Ibnu Sunni no. 68. Lihat Shahih At-Tirmidzi 3/187, Shahih Ibnu Majah 2/266 dan Tuhfatul Akhyar, hal. 45.",
+  "catatan": [
+   {
+    "h": "Makna:",
+    "ol": [
+     "Kalimat Allah = Al Qur'an.",
+     "Yang sempurna = yang tidak memiliki kekurangan maupun cacat, sebagaimana ucapan manusia. Ada yang mengatakan, maksudnya adalah kalimat yang bermanfaat, cukup untuk melindungi apa yang ditakutkan."
+    ]
+   },
+   {
+    "h": "Keutamaannya:",
+    "ol": [
+     "Dari Abu Hurairah radliallahu 'anhu, Nabi shallallahu 'alaihi wa sallam bersabda: \"Barangsiapa yang ketika sore membaca: (doa di atas) 3x setiap sore maka sengatan binatang pada malam itu tidak akan membahayakannya.\" Suhail -perawi hadis- mengatakan: Keluarga kami mempelajari dan membaca dzikir ini setiap malam. Sampai suatu ketika ada gadis kecil di keluarga kami yang tersengat binatang berbisa, namun dia tidak merasakan sakit. (HR. At Turmudzi dan dishahihkan Al Albani).",
+     "Dari Abu Hurairah radliallahu 'anhu, bahwa suatu ketika datang seseorang kepada Nabi shallallahu 'alaihi wa sallam. Dia bercerita: Tadi malam saya ketemu kalajengking dan menyengatku. Nabi shallallahu 'alaihi wa sallam bersabda: \"Andaikan ketika sore kamu membaca: (doa di atas), niscaya binatang itu tidak akan membahayakan dirimu.\" (HR. Muslim)."
+    ]
+   }
+  ]
+ }
+]}
+};
+/* ===================================================================== */
+
+let DATA = [], TOTAL = 0, KATEGORI = "";
+const SUMBER_DEFAULT = "Hisnul Muslim";
+const byId = id => DATA.find(d => d.id === id);
+const dibaca = d => d.dibaca || ("Dibaca "+d.jumlah+"x");
+const $ = id => document.getElementById(id);
+
+/* ---------- state (localStorage, aman bila diblokir) ---------- */
+const KEY = "dzikir-pagi-v1";
+const today = () => { const d=new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); };
+let S = { date: today(), counts:{}, fav:[], auto:true, arab:26, jeda:0.5, latin:false, ket:false, tjOff:{}, kat:"pagi", open:{pagi:true, petang:false}, tema:"terang" };
+try { const r = JSON.parse(localStorage.getItem(KEY)||"null"); if(r){ S = Object.assign(S, r); } } catch(e){}
+if(![0.25,0.5,1].includes(S.jeda)) S.jeda = 0.5;   // pilihan jeda: 0,25 / 0,5 / 1 dtk
+if (S.date !== today()) { S.date = today(); S.counts = {}; }   // hitungan reset otomatis tiap hari
+const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} };
+/* ---------- tema: otomatis / terang / gelap ---------- */
+const mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+function applyTema(){
+  const t = S.tema || "auto";
+  const gelap = t==="gelap" || (t==="auto" && mq && mq.matches);
+  document.documentElement.setAttribute("data-theme", gelap ? "dark" : "light");
+}
+if(mq){ if(mq.addEventListener) mq.addEventListener("change", applyTema); else if(mq.addListener) mq.addListener(applyTema); }
+applyTema();
+
+const ck = id => S.kat==="pagi" ? id : S.kat+id;       // kunci hitungan per kategori (pagi tetap kompatibel)
+const cnt = id => S.counts[ck(id)] || 0;
+function setKat(k){
+  if(!KAT[k]) k = "pagi";
+  S.kat = k; DATA = KAT[k].data; TOTAL = KAT[k].total; KATEGORI = KAT[k].nama;
+  save();
+}
+const isDone = id => { const d=byId(id); return d && cnt(id) >= d.jumlah; };
+
+let cur = null, lastTap = 0, coolT = null, advT = null;
+const jedaOf = d => S.jeda;
+
+function toast(t){ const e=$("toast"); e.textContent=t; e.classList.add("show"); clearTimeout(toast.t); toast.t=setTimeout(()=>e.classList.remove("show"),1600); }
+
+/* ---------- daftar ---------- */
+const kk = (k,id) => k==="pagi" ? id : k+id;
+const cntK = (k,id) => S.counts[kk(k,id)] || 0;
+const katDone = k => KAT[k].data.filter(d => cntK(k,d.id) >= d.jumlah).length;
+
+function resumeTarget(){
+  const order = [S.kat].concat(Object.keys(KAT).filter(k=>k!==S.kat));
+  let started = false;
+  for(const k of order){
+    for(const d of KAT[k].data){ if(cntK(k,d.id)>0) started = true; }
+  }
+  for(const k of order){
+    for(const d of KAT[k].data){
+      if(cntK(k,d.id) < d.jumlah) return {k, d, n:cntK(k,d.id), started};
+    }
+  }
+  return {done:true};
+}
+function renderList(){
+  const root = $("list"); root.innerHTML = "";
+  const r = resumeTarget();
+  if(Object.keys(KAT).some(k=>KAT[k].data.length)){
+    const b = document.createElement("button");
+    if(r.done){ b.className = "resume fin"; b.textContent = "Semua dzikir hari ini selesai ✓"; }
+    else {
+      b.className = "resume";
+      const nm = r.d.judul.replace(/^Dzikir (?:Pagi|Petang)\s*\d+\s*/,"").trim();
+      const lbl = KAT[r.k].nama+" "+r.d.id+(nm ? " · "+nm : "");
+      b.innerHTML = '<small>'+(r.started ? "Lanjut dari terakhir" : "Mulai")+'</small>'+esc(lbl)+(r.n>0 ? ' ('+r.n+'/'+r.d.jumlah+')' : '');
+      b.onclick = () => { location.hash = r.k+"-"+r.d.id; };
+    }
+    root.appendChild(b);
+  }
+  Object.keys(KAT).forEach(k=>{
+    const K = KAT[k], open = !!(S.open && S.open[k]);
+    const g = document.createElement("div"); g.className = "grp"+(open?"":" closed");
+    g.innerHTML =
+      '<div class="cat"><button class="catbtn" aria-expanded="'+open+'"><span>'+K.nama+'</span><span class="chev">&#9660;</span></button>'+
+      '<button class="chip rst">Reset hari ini</button>'+
+      '<span class="badge">'+(K.data.length ? 'Selesai '+katDone(k)+'/'+K.data.length : '')+'</span>'+
+      '<div class="prog"><i style="width:'+(K.total ? Math.round(katDone(k)/K.total*100) : 0)+'%"></i></div></div>'+
+      '<div class="items"><div class="inner"><ul class="rows"></ul></div></div>';
+    const ul = g.querySelector(".rows");
+    if(!K.total){
+      ul.innerHTML = '<li><div class="kosong">'+K.nama+' belum diisi.<br>Datanya akan ditambahkan.</div></li>';
+    }
+    for(let i=1;i<=K.total;i++){
+      const d = K.data.find(x=>x.id===i);
+      const li = document.createElement("li"), b = document.createElement("button");
+      if(!d) b.className = "empty";
+      let right = "";
+      if(d){ const n = cntK(k,i); right = n>=d.jumlah ? '<span class="badge ok">✓ Selesai</span>' : (n>0 ? '<span class="badge">'+n+'/'+d.jumlah+'</span>' : ''); }
+      else right = '<span class="badge">belum diisi</span>';
+      if(d && cntK(k,i)>=d.jumlah) li.className = "done";
+      b.innerHTML = '<span class="num">'+i+'.</span><span class="ttl">'+(d ? d.judul : K.nama+" "+i)+'</span>'+right;
+      b.onclick = () => { location.hash = k+"-"+i; };
+      li.appendChild(b); ul.appendChild(li);
+    }
+    // klik baris kategori: lipat / buka daftar
+    g.querySelector(".cat").onclick = e => {
+      if(e.target.closest(".rst")) return;
+      const closed = g.classList.toggle("closed");
+      S.open = S.open || {}; S.open[k] = !closed;
+      g.querySelector(".catbtn").setAttribute("aria-expanded", String(!closed)); save();
+    };
+    g.querySelector(".rst").onclick = () => {
+      K.data.forEach(d => { delete S.counts[kk(k,d.id)]; }); save(); renderList(); toast("Hitungan "+K.nama+" direset");
+    };
+    root.appendChild(g);
+  });
+}
+
+/* ---------- detail ---------- */
+function esc(s){ return s.replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+
+/* ---------- tajwid otomatis (berbasis aturan huruf) ---------- */
+function tjParse(text){
+  const MK=/[ً-ٰٟۖ-ۭ]/, LT=/[ء-يٱ-ۓـ]/;
+  const it=[]; let w=0;
+  for(const c of text){
+    if(LT.test(c)){ it.push({b:c,m:"",raw:c,w}); }
+    else if(MK.test(c) && it.length && !it[it.length-1].sep){ const x=it[it.length-1]; x.m+=c; x.raw+=c; }
+    else { w++; it.push({sep:true,raw:c,w}); }
+  }
+  const L = it.filter(x=>!x.sep && x.b!=="ـ");
+  const SUK="ْ", SHD="ّ", FAT="َ", DAM="ُ", KAS="ِ", TW=/[ًٌٍ]/;
+  const nrm = b => "ءأإؤئ".includes(b) ? "H" : (b==="ا"||b==="ٱ") ? "A" : b;
+  L.forEach((c,p)=>{
+    let nx = L[p+1]; const pv = L[p-1];
+    if(TW.test(c.m) && nx && nx.b==="ا" && nx.m==="" && nx.w===c.w) nx = L[p+2];
+    const nb = nx ? nrm(nx.b) : "";
+    const same = !!nx && nx.w===c.w;
+    const pw = pv && pv.w===c.w ? pv : null;      // huruf sebelumnya harus satu kata
+    const pw2 = L[p-2], nn = L[p+2];
+    const wasl = !!pw && !(pw2 && pw2.w===c.w) && "وفبكل".includes(pw.b) && !!nx && (nx.m.includes(SUK) || (nx.b==="ل" && nx.m==="" && !!nn && nn.m.includes(SHD)));   // alif "ال" (wasal), bukan mad
+    let mad = false;
+    if(c.m.includes("ٰ")) mad = true;
+    else if(c.b==="ا" && (c.m===""||c.m==="ٓ") && pw && pw.m.includes(FAT) && !wasl) mad = true;
+    else if(c.b==="و" && (c.m===""||c.m===SUK) && pw && pw.m.includes(DAM) && !(pw.b==="أ" && nx && nx.b==="ل")) mad = true;
+    else if(c.b==="ي" && (c.m===""||c.m===SUK) && pw && pw.m.includes(KAS)) mad = true;
+    else if(c.b==="ى" && c.m==="" && pw && pw.m.includes(FAT)) mad = true;
+    if(mad){
+      const nx2 = L[p+1], nb2 = nx2 ? nrm(nx2.b) : "", same2 = !!nx2 && nx2.w===c.w;
+      if(nb2==="H") c.t = "mw";
+      else if(same2 && (nx2.m.includes(SHD)||nx2.m.includes(SUK))) c.t = "ml";
+      else c.t = "mt";
+      return;
+    }
+    if((c.b==="ن" && c.m.includes(SUK) && !c.m.includes(SHD)) || TW.test(c.m)){
+      if(!nx) return;
+      if("يو".includes(nb) && same) return;               // izhar mutlak
+      if("ينمو".includes(nb)) c.t = "ib";
+      else if("لر".includes(nb)) c.t = "ia";
+      else if(nb==="ب") c.t = "iq";
+      else if("تثجدذزسشصضطظفقك".includes(nb)) c.t = "ik";
+      return;
+    }
+    if(c.b==="م" && c.m.includes(SUK) && !c.m.includes(SHD)){
+      if(nb==="ب") c.t = "is"; else if(nb==="م") c.t = "im";
+      return;
+    }
+    if((c.b==="ن"||c.b==="م") && c.m.includes(SHD)){
+      const pn = pv && pv.w!==c.w && ((pv.b==="ن" && pv.m.includes(SUK)) || TW.test(pv.m) || (c.b==="م" && pv.b==="م" && pv.m.includes(SUK)));
+      if(!pn) c.t = "gh";           // bila didahului nun mati/tanwin = idgham, bukan ghunnah
+      return;
+    }
+    if("قطبجد".includes(c.b) && c.m.includes(SUK) && !c.m.includes(SHD)) c.t = "qa";
+  });
+  it.forEach(x=>{ if(!x.sep && x.b==="ـ" && x.m.includes("ٰ")) x.t = "mt"; });
+  return it;
+}
+function tjHTML(it, only, flat){
+  return it.map(x=>{
+    let r = esc(x.raw); r = flat ? r.replace(/\n/g," ") : r.replace(/\n/g,"<br>");
+    const on = x.t && (only ? x.t===only && !S.tjOff[only] : !S.tjOff[x.t]);
+    return on ? '<span class="t-'+x.t+'">'+r+'</span>' : r;
+  }).join("");
+}
+const tajwid = text => tjHTML(tjParse(text));
+const arabHTML = d => tajwid(d.arab);
+const kw = (k,t) => '<span class="t-'+k+'">'+t+'</span>';
+const TJ = [
+ {k:"gh", n:"Ghunnah", d:()=>'<p>Ketika huruf '+kw("gh","Nun ber-tasydid (نَّ)")+' atau '+kw("gh","Mim ber-tasydid (مَّ)")+'.</p><p>Cara baca: didengungkan serta ditahan sekitar 2 harakat sebelum menyebut jelas huruf Nun/Mim-nya.</p><p><i>* Namun jika huruf sebelumnya adalah nun mati atau tanwin, hukumnya berubah menjadi Idgham Bighunnah.</i></p>'},
+ {k:"ib", n:"Idgham Bighunnah", d:()=>'<p>Ketika huruf '+kw("ib","Nun mati (نْ)")+' atau '+kw("ib","Tanwin")+' bertemu salah satu dari 4 huruf ini '+kw("ib","(ي و م ن)")+'.</p><p>Cara baca: nun mati atau tanwin dilebur ke huruf di depannya, seolah-olah bunyi N tidak dibaca, sambil didengungkan dan ditahan sekitar 2 harakat sebelum menyebut jelas huruf di depannya.</p><p><i>* Namun jika Nun mati bertemu Waw atau Ya dalam satu kata (tanpa spasi), hukumnya menjadi Izhar Wajib (dibaca jelas tanpa dengung), contoh: دُنْيَا.</i></p>'},
+ {k:"ia", n:"Idgham Bilaghunnah", d:()=>'<p>Ketika huruf '+kw("ia","Nun mati (نْ)")+' atau '+kw("ia","Tanwin")+' bertemu salah satu dari 2 huruf ini: Lam (ل) atau Ra (ر).</p><p>Cara baca: nun mati atau tanwin dilebur ke huruf di depannya, bunyi N tidak dibaca, tanpa dengung, lalu langsung menyebut jelas huruf di depannya.</p>'},
+ {k:"im", n:"Idgham Mitslain (Mimi)", d:()=>'<p>Ketika huruf '+kw("im","Mim mati (مْ)")+' bertemu huruf '+kw("im","Mim (م)")+' ber-harakat (Mim hidup).</p><p>Cara baca: mim mati dilebur ke mim hidup di depannya, seolah-olah bunyi M pada mim mati tidak dibaca, sambil didengungkan dan ditahan sekitar 2 harakat sebelum menyebut jelas huruf Mim hidup.</p>'},
+ {k:"iq", n:"Iqlab", d:()=>'<p>Ketika huruf '+kw("iq","Nun mati (نْ)")+' atau '+kw("iq","Tanwin")+' bertemu huruf '+kw("iq","Ba (ب)")+'.</p><p>Cara baca: bunyi nun mati atau tanwin diganti menjadi mim, bibir dirapatkan, didengungkan sekitar 2 harakat sebelum menyebut jelas huruf Ba.</p>'},
+ {k:"ik", n:"Ikhfa", d:()=>'<p>Ketika huruf '+kw("ik","Nun mati (نْ)")+' atau '+kw("ik","Tanwin")+' bertemu salah satu dari 15 huruf ini '+kw("ik","(ت ث ج د ذ ز س ش ص ض ط ظ ف ق ك)")+'.</p><p>Cara baca: nun mati atau tanwin disamarkan seperti bunyi NG, ditahan sekitar 2 harakat sebelum menyebut jelas huruf di depannya.</p><p>Ikhfa terbagi 3: (1) Aqrab (dekat, NG agak kurang jelas): ت د ط. (2) Ausath (sedang): ث ج ذ ز س ش ص ض ظ ف. (3) Ab\'ad (jauh, NG terdengar jelas): ق ك.</p>'},
+ {k:"is", n:"Ikhfa Syafawi", d:()=>'<p>Ketika huruf '+kw("is","Mim mati (مْ)")+' bertemu huruf '+kw("is","Ba (ب)")+'.</p><p>Cara baca: mim mati disamarkan (bibir dirapatkan pelan, bunyi MNG) dan ditahan sekitar 2 harakat sebelum menyebut jelas huruf Ba.</p>'},
+ {k:"qa", n:"Qalqalah", d:()=>'<p>Ketika salah satu dari 5 huruf ini '+kw("qa","(ق ط ب ج د)")+' mati (sukun) di tengah kalimat, disebut Qalqalah Sughra (kecil).</p><p>Cara baca: huruf dipantulkan, bunyinya memantul ringan. Jika berhenti (waqaf) di akhir ayat, disebut Qalqalah Kubra (besar), pantulannya lebih kuat; yang ini tidak diwarnai di sini karena bergantung tempat berhenti.</p>'},
+ {k:"mt", n:"Mad Thabii (Asli)", d:()=>'<p>Ketika '+kw("mt","fathah + alif")+', '+kw("mt","kasrah + ya")+', '+kw("mt","dhammah + waw")+', atau alif kecil di atas huruf, dan tidak bertemu hamzah atau sukun.</p><p>Cara baca: dipanjangkan 2 harakat.</p>'},
+ {k:"mw", n:"Mad Wajib Muttasil / Jaiz Munfasil", d:()=>'<p>Ketika huruf mad '+kw("mw","bertemu hamzah")+': dalam satu kata (Wajib Muttasil) atau beda kata (Jaiz Munfasil).</p><p>Cara baca: dipanjangkan 4–5 harakat.</p>'},
+ {k:"ml", n:"Mad Lazim", d:()=>'<p>Ketika huruf mad bertemu huruf '+kw("ml","bertasydid atau bersukun")+' dalam satu kata.</p><p>Cara baca: dipanjangkan 6 harakat.</p>'}
+];
+function tjExample(k){
+  for(const kk of Object.keys(KAT)) for(const d of KAT[kk].data){
+    const it = tjParse(d.arab), x = it.find(y=>y.t===k);
+    if(!x) continue;
+    const part = it.filter(y=>y.w>=x.w-1 && y.w<=x.w+1);
+    while(part.length && part[0].sep) part.shift();
+    while(part.length && part[part.length-1].sep) part.pop();
+    return tjHTML(part, k, true);
+  }
+  return "";
+}
+const TJS = {
+ gh:"Nun/mim bertasydid: didengungkan sekitar 2 harakat.",
+ ib:"Nun mati/tanwin bertemu ي ن م و: dilebur ke huruf berikutnya dengan dengung sekitar 2 harakat.",
+ ia:"Nun mati/tanwin bertemu ل atau ر: dilebur ke huruf berikutnya tanpa dengung.",
+ im:"Mim mati bertemu mim hidup: dilebur dengan dengung sekitar 2 harakat.",
+ iq:"Nun mati/tanwin bertemu ب: bunyinya diganti mim, bibir dirapatkan, dengung sekitar 2 harakat.",
+ ik:"Nun mati/tanwin bertemu salah satu dari 15 huruf ikhfa: dibaca samar (bunyi NG) dengan dengung sekitar 2 harakat.",
+ is:"Mim mati bertemu ب: dibaca samar, bibir dirapatkan pelan, dengung sekitar 2 harakat.",
+ qa:"Huruf ق ط ب ج د yang bersukun: dibaca memantul ringan.",
+ mt:"Mad asli: dipanjangkan 2 harakat.",
+ mw:"Huruf mad bertemu hamzah: dipanjangkan 4–5 harakat.",
+ ml:"Huruf mad bertemu huruf bertasydid/bersukun: dipanjangkan 6 harakat."
+};
+const tip = $("tip"); let tipEl = null;
+function closeTip(){ tip.classList.add("hidden"); if(tipEl){ tipEl.classList.remove("sel"); tipEl = null; } }
+document.addEventListener("click", e => {
+  const sp = e.target.closest(".arab span[class^='t-']");
+  if(!sp){ if(!e.target.closest("#tip")) closeTip(); return; }
+  if(tipEl===sp){ closeTip(); return; }
+  closeTip();
+  const k = sp.className.split(" ")[0].slice(2), r = TJ.find(x=>x.k===k); if(!r) return;
+  tipEl = sp; sp.classList.add("sel");
+  tip.innerHTML = '<div class="tn"><i style="background:var(--b-'+k+')"></i><b>'+r.n+'</b></div><p>'+TJS[k]+'</p><button type="button" id="tipMore">Penjelasan lengkap</button>';
+  $("tipMore").onclick = () => { closeTip(); openInfo(); const sec = document.querySelector('#isec .sec[data-k="'+k+'"]'); if(sec) sec.scrollIntoView(); };
+  tip.style.visibility = "hidden"; tip.classList.remove("hidden");
+  const rc = sp.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+  let top = rc.top - h - 10; if(top < 70) top = rc.bottom + 10;
+  if(top + h > innerHeight - 110) top = Math.max(70, rc.top - h - 10);
+  tip.style.top = top+"px";
+  tip.style.left = Math.max(12, Math.min(innerWidth - w - 12, rc.left + rc.width/2 - w/2))+"px";
+  tip.style.visibility = "";
+});
+window.addEventListener("scroll", () => { if(tipEl) closeTip(); }, {passive:true});
+function refreshArab(){ const a=document.querySelector("#page .arab"), d=byId(cur); if(a&&d) a.innerHTML = arabHTML(d); }
+function renderInfo(){
+  $("isec").innerHTML = TJ.map(r=>{
+    const ex = tjExample(r.k);
+    return '<div class="sec" data-k="'+r.k+'"><div class="th" style="background:var(--b-'+r.k+')"><span>'+r.n+'</span><label class="tg"><input type="checkbox"'+(S.tjOff[r.k]?'':' checked')+' aria-label="'+r.n+'"><b></b></label></div><div class="tb">'+r.d()+'</div>'+(ex?'<div class="ex">'+ex+'</div>':'<p class="tb" style="padding-top:0;font-size:13px"><i>Belum ada contoh pada dzikir yang tersedia.</i></p>')+'</div>';
+  }).join("");
+  document.querySelectorAll("#isec .sec").forEach(sec=>{
+    const k = sec.dataset.k;
+    sec.querySelector("input").onchange = e => {
+      if(e.target.checked) delete S.tjOff[k]; else S.tjOff[k] = true;
+      save(); refreshArab();
+      const exEl = sec.querySelector(".ex"); if(exEl) exEl.innerHTML = tjExample(k);
+    };
+  });
+}
+
+function renderDetail(){
+  const id = cur, d = byId(id);
+  applyArab();
+  $("pos").textContent = id+" / "+TOTAL;
+  const page = $("page");
+  if(!d){
+    page.innerHTML = '<p class="kicker">'+KATEGORI+'</p><h2 class="title">'+KATEGORI+' '+id+'</h2><div class="kosong">Isi bacaan ini belum ditambahkan.</div>';
+    $("counter").classList.add("hidden"); updProg(); window.scrollTo(0,0); return;
+  }
+  $("counter").classList.remove("hidden");
+  const sisa = d.judul.replace(/^Dzikir (?:Pagi|Petang)\s*\d+\s*/,"").trim();   // buang "Dzikir Pagi N" (sudah ada di atas & di penanda N / 21)
+  let h = '<p class="kicker">'+KATEGORI+'</p><div class="head">'+(sisa?'<h2 class="title">'+esc(sisa)+'</h2>':'')+'<span class="dibaca">'+esc(dibaca(d))+'</span></div>';
+  h += '<div class="arab">'+arabHTML(d)+'</div>';
+  if(d.latin) h += '<details class="lat" data-k="latin"'+(S.latin?' open':'')+'><summary>Bacaan Latin</summary><p class="latin">'+esc(d.latin)+'</p></details>';
+  if(d.arti)  h += '<p class="arti">'+esc(d.arti)+'</p>';
+  if(d.sumber) h += '<p class="sumber">'+esc(d.sumber)+'</p>';
+  if((d.catatan||[]).length) h += '<details class="lat" data-k="ket"'+(S.ket?' open':'')+'><summary>Keutamaan dan keterangan</summary>';
+  (d.catatan||[]).forEach(n=>{
+    h += '<div class="note">';
+    if(n.h) h += '<h4>'+esc(n.h)+'</h4>';
+    (n.p||[]).forEach(p=> h += '<p>'+esc(p)+'</p>');
+    if(n.ol) h += '<ol>'+n.ol.map(x=> typeof x==="string" ? '<li>'+esc(x)+'</li>'
+      : '<li>'+esc(x.t)+'<ol type="a">'+x.sub.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ol></li>').join("")+'</ol>';
+    h += '</div>';
+  });
+  if((d.catatan||[]).length) h += '</details>';
+  h += '<p class="src">Sumber: '+esc(d.sumberAkhir||SUMBER_DEFAULT)+'.</p>';
+  page.innerHTML = h;
+  page.querySelectorAll("details.lat").forEach(L => { L.ontoggle = () => { S[L.dataset.k] = L.open; save(); }; });
+  renderCounter();
+  window.scrollTo(0,0);
+}
+
+function renderCounter(){
+  const d = byId(cur); if(!d) return;
+  const n = cnt(cur), done = n >= d.jumlah;
+  const tap = $("tap");
+  tap.classList.toggle("done", done);
+  $("tapMain").textContent = done ? "✓ Selesai" : n+" / "+d.jumlah;
+  $("tapSub").textContent  = done ? "Ketuk untuk lanjut" : (d.jumlah>1 ? "Ketuk tiap selesai membaca" : "Ketuk setelah membaca");
+  $("auto").checked = S.auto;
+  $("undo").disabled = n<=0;
+  updProg();
+}
+function updProg(){
+  if(!TOTAL) return;
+  $("progF").style.width = Math.round(katDone(S.kat)/TOTAL*100)+"%";
+  $("progM").style.left = (cur ? (cur-0.5)/TOTAL*100 : 0)+"%";
+}
+
+function startCool(j){
+  const t = $("tap"); clearTimeout(coolT);
+  t.classList.remove("cool"); void t.offsetWidth;
+  t.style.setProperty("--jeda", j+"s"); t.classList.add("cool");
+  coolT = setTimeout(()=>t.classList.remove("cool"), j*1000);
+}
+$("tap").onclick = () => {
+  const d = byId(cur); if(!d) return;
+  const now = Date.now();
+  const jd = jedaOf(d);
+  if(now - lastTap < jd*1000){            // abaikan ketukan beruntun (anti double-klik), beri tanda bergetar
+    const t=$("tap"); t.classList.remove("rej"); void t.offsetWidth; t.classList.add("rej"); return;
+  }
+  lastTap = now; startCool(jd);
+  if(isDone(cur)){ next(); return; }
+  S.counts[ck(cur)] = cnt(cur)+1; save(); renderCounter();
+  const nn = cnt(cur);
+  try{ navigator.vibrate && navigator.vibrate(isDone(cur)?[30,40,30] : (d.jumlah>=20 && nn%10===0) ? [60,40,60] : 15); }catch(e){}
+  if(isDone(cur) && S.auto){
+    const nx = byId(cur+1);
+    if(nx){ clearTimeout(advT); advT = setTimeout(()=>{ if(cur===d.id) next(); }, 700); }
+    else toast("Selesai ✓");
+  }
+};
+$("undo").onclick = () => {
+  const n = cnt(cur); if(n<=0) return;
+  clearTimeout(advT); S.counts[ck(cur)] = n-1; lastTap=0; clearTimeout(coolT); $("tap").classList.remove("cool");
+  save(); renderCounter();
+};
+$("reset").onclick = () => { clearTimeout(advT); S.counts[ck(cur)]=0; lastTap=0; clearTimeout(coolT); $("tap").classList.remove("cool"); save(); renderCounter(); };
+$("auto").onchange = e => { S.auto = e.target.checked; save(); };
+
+/* ---------- navigasi ---------- */
+function go(i){ location.hash = S.kat+"-"+i; }
+const next = () => { if(cur<TOTAL) go(cur+1); };
+const prev = () => { if(cur>1) go(cur-1); };
+$("back").onclick = () => { location.hash = S.kat; };
+$("copy").onclick = async () => {
+  const d = byId(cur); if(!d) return;
+  const t = [d.judul, dibaca(d), "", d.arab, "", d.latin||"", "", d.arti||"", "", d.sumber||"", "Sumber: "+SUMBER_DEFAULT].join("\n").replace(/\n{3,}/g,"\n\n");
+  try{ await navigator.clipboard.writeText(t); toast("Tersalin"); }catch(e){ toast("Gagal menyalin"); }
+};
+/* ---------- geser kiri/kanan (aktif di seluruh layar detail) ---------- */
+(function(){
+  let x0=0,y0=0,t0=0,on=false;
+  const blocked = t => t.closest && t.closest("#pop,#iview,#tip");
+  document.addEventListener("touchstart", e=>{
+    on = false;
+    if(e.touches.length!==1 || $("viewDetail").classList.contains("hidden") || blocked(e.target)) return;
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY; t0=Date.now(); on=true;
+  }, {passive:true});
+  document.addEventListener("touchend", e=>{
+    if(!on) return; on=false;
+    if($("viewDetail").classList.contains("hidden")) return;
+    const t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0;
+    if(Math.abs(dx)>50 && Math.abs(dx)>1.2*Math.abs(dy) && Date.now()-t0<1200){
+      lastTap = 0; clearTimeout(advT); clearTimeout(coolT); $("tap").classList.remove("cool");   // pindah manual: jeda direset
+      if(typeof closeTip==="function") closeTip();
+      if(dx<0){ if(cur<TOTAL) next(); else toast("Ini dzikir terakhir"); }   // geser kiri -> berikutnya
+      else    { if(cur>1) prev(); else toast("Ini dzikir pertama"); }        // geser kanan -> sebelumnya
+    }
+  }, {passive:true});
+  document.addEventListener("touchcancel", ()=>{ on=false; }, {passive:true});
+})();
+
+/* ---------- pop-up pengaturan (gear) ---------- */
+const pop = $("pop"), scrim = $("scrim");
+function syncPop(){
+  $("pSize").textContent = S.arab;
+  document.querySelectorAll("#pJeda button").forEach(b=>b.classList.toggle("on", parseFloat(b.dataset.j)===S.jeda));
+  document.querySelectorAll("#pTema button").forEach(b=>b.classList.toggle("on", b.dataset.t===(S.tema||"auto")));
+}
+const iview = $("iview");
+function openInfo(){ closePop(); renderInfo(); iview.classList.remove("hidden"); scrim.classList.remove("hidden"); iview.scrollTop = 0; }
+function closeInfo(){ if(iview.classList.contains("hidden")) return; iview.classList.add("hidden"); scrim.classList.add("hidden"); }
+$("info").onclick = openInfo;
+$("iback").onclick = closeInfo;
+function openPop(){ closeInfo(); syncPop(); pop.classList.remove("hidden"); scrim.classList.remove("hidden"); }
+function closePop(){ pop.classList.add("hidden"); scrim.classList.add("hidden"); if(typeof closeInfo==="function") closeInfo(); if(typeof closeTip==="function") closeTip(); }
+const applyArab = () => { const st=document.documentElement.style; st.setProperty("--arab", S.arab+"px"); };
+$("gear").onclick = () => pop.classList.contains("hidden") ? openPop() : closePop();
+scrim.onclick = closePop;
+document.addEventListener("keydown", e => { if(e.key==="Escape") closePop(); });
+$("pMin").onclick  = () => { S.arab=Math.max(20,S.arab-3); save(); applyArab(); syncPop(); };
+$("pPlus").onclick = () => { S.arab=Math.min(54,S.arab+3); save(); applyArab(); syncPop(); };
+document.querySelectorAll("#pJeda button").forEach(b=>b.onclick=()=>{ S.jeda=parseFloat(b.dataset.j); save(); syncPop(); });
+document.querySelectorAll("#pTema button").forEach(b=>b.onclick=()=>{ S.tema=b.dataset.t; save(); applyTema(); syncPop(); });
+
+function route(){
+  closePop();
+  const h = location.hash; let k = null, n = 0, m;
+  if((m=/^#(pagi|petang)-(\d+)$/.exec(h))){ k=m[1]; n=+m[2]; }
+  else if((m=/^#d(\d+)$/.exec(h))){ k="pagi"; n=+m[1]; }      // tautan lama
+  else if((m=/^#(pagi|petang)$/.exec(h))){ k=m[1]; }
+  setKat(k || S.kat);
+  if(n>=1 && n<=TOTAL){
+    cur = n;
+    $("viewList").classList.add("hidden"); $("viewDetail").classList.remove("hidden");
+    renderDetail();
+  } else {
+    cur = null;
+    $("viewDetail").classList.add("hidden"); $("viewList").classList.remove("hidden");
+    renderList(); window.scrollTo(0,0);
+  }
+}
+window.addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>
