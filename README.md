@@ -1,4 +1,4 @@
-# Dzikir Pagi & Petang
+# Dzikir Pagi-Petang
 
 Website bacaan Dzikir Pagi (21 bacaan) dan Dzikir Petang (20 bacaan), dengan counter per bacaan. Sumber teks: Hisnul Muslim. Satu file HTML tanpa build.
 
